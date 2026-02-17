@@ -380,21 +380,27 @@ export default function SlideContent({ slide, isActive, revealStep = 0 }) {
     case 'legacy':
       return (
         <div className="content-stack wide legacy-layout">
-          <div>
-            <h2 className="slide-title reveal">Influence & Legacy</h2>
+          <div className="legacy-header">
+            <h2 className="slide-title">Influence & Legacy</h2>
             <RevealBlock step={1} revealStep={revealStep}>
               <p className="slide-lead">Beyond music, Wizkid shaped how African creativity is perceived in fashion, media, and youth culture.</p>
             </RevealBlock>
           </div>
           <RevealBlock step={2} revealStep={revealStep} className="legacy-video-wrap">
             <div className="legacy-video-stack">
-              <video className="legacy-video" controls preload="metadata">
-                <source src={slide.videoFile} type="video/mp4" />
-              </video>
-              {slide.secondVideoFile ? (
+              <div className="legacy-video-card">
+                <p className="legacy-video-label">Performance 1</p>
                 <video className="legacy-video" controls preload="metadata">
-                  <source src={slide.secondVideoFile} type="video/mp4" />
+                  <source src={slide.videoFile} type="video/mp4" />
                 </video>
+              </div>
+              {slide.secondVideoFile ? (
+                <div className="legacy-video-card">
+                  <p className="legacy-video-label">Performance 2</p>
+                  <video className="legacy-video" controls preload="metadata">
+                    <source src={slide.secondVideoFile} type="video/mp4" />
+                  </video>
+                </div>
               ) : null}
             </div>
           </RevealBlock>
