@@ -10,6 +10,8 @@ export const slides = [
     date: 'February 16, 2026',
     backgroundVideo: assetUrl('wizkid-opening.mp4'),
     revealSteps: 3,
+    notes: "Opening: Hello everyone, thank you for being here. Today, I am presenting Wizkid, one of the most influential international artists of his generation. Main message: this presentation explains how he moved from local recognition to global impact while keeping a strong African identity. Evidence: we will review his beginnings, breakthrough records, worldwide collaborations, and major awards. Transition: now that the objective is clear, let us begin with who Wizkid really is.",
+    targetTime: '1:10',
   },
   {
     id: 2,
@@ -19,6 +21,8 @@ export const slides = [
       'https://i8.amplience.net/i/naras/wizkid_MI0005473154-MN0003081520',
     videoFile: assetUrl('WhatsApp Video 2026-02-16 at 11.40.28.mp4'),
     revealSteps: 3,
+    notes: "Opening: To understand his success, we first need to define his identity. Main message: Wizkid, born Ayodeji Ibrahim Balogun in Lagos, is not only a performer but also a cultural brand that represents modern Afrobeats. Evidence: his style combines melody, rhythm, and a globally accessible sound while remaining rooted in African expression. Professional angle: this identity positioning is a major reason his brand scales across continents. Transition: with this profile in mind, let us look at where everything started.",
+    targetTime: '1:10',
   },
   {
     id: 3,
@@ -27,6 +31,8 @@ export const slides = [
     backgroundImage:
       'https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b?auto=format&fit=crop&w=1920&q=80',
     revealSteps: 3,
+    notes: "Opening: Every major career has a foundation, and Wizkid's foundation is discipline. Main message: his humble beginnings in Lagos and his early entry into music shaped his long-term mindset. Evidence: he started recording at a young age, developed consistency early, and built his confidence before reaching mainstream visibility. Professional angle: this stage shows that sustainable success usually comes from process, not instant fame. Transition: after this preparation phase, the next slide shows his first real breakthrough.",
+    targetTime: '1:10',
   },
   {
     id: 4,
@@ -35,6 +41,8 @@ export const slides = [
     backgroundImage:
       'https://upload.wikimedia.org/wikipedia/commons/c/cc/Wizkid_at_Iyanya%27s_album_launch_concert%2C_2013.jpg',
     revealSteps: 3,
+    notes: "Opening: This slide represents the strategic turning point of his career. Main message: the release of Holla at Your Boy and the Superstar era moved Wizkid from local visibility to continental stardom. Evidence: his audience expanded rapidly across Africa, and he became a reference point for a new generation of artists. Professional angle: this is the moment where product-market fit became obvious in the music industry context. Transition: once regional leadership was established, the next step was global expansion.",
+    targetTime: '1:20',
   },
   {
     id: 5,
@@ -43,6 +51,8 @@ export const slides = [
     backgroundImage:
       'https://images.unsplash.com/photo-1467269204594-9661b134dd2b?auto=format&fit=crop&w=1920&q=80',
     revealSteps: 3,
+    notes: "Opening: This is where Wizkid becomes a global name. Main message: One Dance, especially through collaboration strategy, accelerated his international adoption. Evidence: chart performance and worldwide streaming proved that Afrobeats could compete in mainstream global markets. Professional angle: this was not random success, it was a high-leverage collaboration that repositioned his visibility internationally. Transition: after global breakthrough, we can now evaluate his role in the wider Afrobeats movement.",
+    targetTime: '1:25',
   },
   {
     id: 6,
@@ -51,6 +61,8 @@ export const slides = [
     backgroundImage: assetUrl('wizkid-live.mp4'),
     isVideoBackground: true,
     revealSteps: 3,
+    notes: "Opening: Beyond charts, Wizkid influenced culture. Main message: he became a cultural ambassador by exporting not only music, but also confidence, aesthetics, and African identity. Evidence: his sound and visual language are now embedded in global pop conversations. Professional angle: this is cultural leadership, not just entertainment success. Transition: if impact is real, we should see it in formal recognition and measurable records, which is exactly the next slide.",
+    targetTime: '1:20',
   },
   {
     id: 7,
@@ -59,6 +71,8 @@ export const slides = [
     backgroundImage:
       'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=1920&q=80',
     revealSteps: 3,
+    notes: "Opening: Here we move from narrative to proof. Main message: Wizkid's credibility is validated by top-tier awards and exceptional performance metrics. Evidence: Grammy recognition, major award wins, and strong streaming volumes confirm both artistic quality and market relevance. Professional angle: this combination of critical and commercial validation is rare and positions him among elite global artists. Transition: after data and awards, let us briefly experience the music directly through selected videos.",
+    targetTime: '1:15',
   },
   {
     id: 8,
@@ -67,6 +81,8 @@ export const slides = [
     backgroundImage: assetUrl('wizkid-performance.mp4'),
     isVideoBackground: true,
     revealSteps: 2,
+    notes: "Opening: At this point, I want us to experience the work directly. Main message: this video illustrates the greatness of the man through performance quality, musical precision, and audience response. Evidence: pay attention to production standards, vocal control, rhythm architecture, and crowd engagement. Professional angle: this is where technical quality meets emotional impact. Transition: after this live experience, we can better understand the depth of his long-term influence.",
+    targetTime: '1:20',
   },
   {
     id: 9,
@@ -77,6 +93,8 @@ export const slides = [
     videoFile: assetUrl('WhatsApp Video 2026-02-16 at 19.57.27 (1) (1).mp4'),
     secondVideoFile: assetUrl('WhatsApp Video 2026-02-16 at 19.57.27.mp4'),
     revealSteps: 4,
+    notes: "Opening: Wizkid's influence extends far beyond songs. Main message: this video illustrates the greatness of the man and shows how his image shapes fashion, youth culture, and emerging African talent. Evidence: his style language, public positioning, and creative choices are continuously referenced by younger artists. Professional angle: this is legacy creation in real time. Transition: with this influence established, the next slide presents the core argument for why many consider him the greatest African artist.",
+    targetTime: '1:15',
   },
   {
     id: 10,
@@ -85,6 +103,8 @@ export const slides = [
     backgroundImage:
       'https://upload.wikimedia.org/wikipedia/commons/d/d4/Wizkid_in_Canex_-_Algiers_2025.jpg',
     revealSteps: 3,
+    notes: "Opening: This is my central argument. Main message: Wizkid combines longevity, consistency, global relevance, and cultural authenticity at an exceptional level. Evidence: he has maintained relevance across eras, delivered influential records, and preserved a clear artistic identity while scaling globally. Professional angle: greatness is not one hit, it is sustained high performance over time. Transition: to conclude, I want to leave one final message that connects his story to a broader vision.",
+    targetTime: '1:25',
   },
   {
     id: 11,
@@ -92,5 +112,7 @@ export const slides = [
     title: 'Inspirational Message',
     backgroundVideo: assetUrl('wizkid-live.mp4'),
     revealSteps: 2,
+    notes: "Opening: To conclude, let me leave you with one clear message. Main message: Wizkid proves that African excellence can lead on the global stage without losing its identity. Evidence: from Lagos origins to international recognition, his trajectory demonstrates possibility, discipline, and vision. Closing line: thank you for your attention, and I hope this presentation showed why his impact is both artistic and historical.",
+    targetTime: '1:00',
   },
 ];

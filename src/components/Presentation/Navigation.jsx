@@ -5,6 +5,8 @@ export default function Navigation({
   onPrev,
   onToggleFullscreen,
   isFullscreen,
+  onOpenPresenter,
+  isPresenterWindow,
 }) {
   const isFirst = currentIndex === 0;
   const isLast = currentIndex === totalSlides - 1;
@@ -37,6 +39,18 @@ export default function Navigation({
           )}
         </svg>
       </button>
+
+      {!isPresenterWindow ? (
+        <button
+          type="button"
+          onClick={onOpenPresenter}
+          className="nav-button nav-button-presenter"
+          aria-label="Open presenter window"
+          title="Open presenter window"
+        >
+          P
+        </button>
+      ) : null}
 
       <button type="button" onClick={onNext} disabled={isLast} className="nav-button nav-button-next" aria-label="Next slide">
         <svg viewBox="0 0 24 24" aria-hidden="true" style={iconStyle}>
