@@ -362,29 +362,24 @@ body,
 }
 
 .app-shell.is-presenter-window {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(360px, 40vw);
-}
-
-.app-shell.is-presenter-window .slide {
-  position: relative;
+  display: block;
 }
 
 .app-shell.is-presenter-window .slide-content {
   overflow: hidden;
-  padding-right: clamp(1rem, 2.3vw, 2rem);
+  padding-right: 0;
 }
 
 .app-shell.is-presenter-window .presenter-panel {
-  position: relative;
-  top: auto;
-  right: auto;
-  left: auto;
-  bottom: auto;
+  position: fixed;
+  top: 0.9rem;
+  right: 0.9rem;
+  left: 0.9rem;
+  bottom: 0.9rem;
   width: auto;
   max-width: none;
-  height: calc(100vh - 2.2rem);
-  margin: 1.1rem 1rem 1.1rem 0;
+  height: auto;
+  margin: 0;
   display: grid;
   grid-template-rows: auto auto auto auto auto 1fr auto;
   gap: 0.18rem;

@@ -351,30 +351,34 @@ export default function App() {
 
   return (
     <main className={`app-shell ${focusMode ? 'is-focus-mode' : ''} ${isPresenterWindow ? 'is-presenter-window' : ''}`} ref={appRef}>
-      {!focusMode ? <ProgressBar progress={progress} /> : null}
-      {!focusMode ? <p className="slide-meta">{activeSlide.title}</p> : null}
+      {!focusMode && !isPresenterWindow ? <ProgressBar progress={progress} /> : null}
+      {!focusMode && !isPresenterWindow ? <p className="slide-meta">{activeSlide.title}</p> : null}
 
-      <Slide
-        slide={activeSlide}
-        direction={displayDirection}
-        key={activeSlide.id}
-        onReveal={isPresenterWindow ? undefined : handleReveal}
-        backgroundVideoMuted={backgroundVideoMuted}
-        disableMediaPlayback={isPresenterWindow}
-      >
-        <SlideContent slide={activeSlide} isActive revealStep={displayRevealStep} isPresenterPreview={isPresenterWindow} />
-      </Slide>
+      {!isPresenterWindow ? (
+        <Slide
+          slide={activeSlide}
+          direction={displayDirection}
+          key={activeSlide.id}
+          onReveal={handleReveal}
+          backgroundVideoMuted={backgroundVideoMuted}
+          disableMediaPlayback={false}
+        >
+          <SlideContent slide={activeSlide} isActive revealStep={displayRevealStep} />
+        </Slide>
+      ) : null}
 
-      <Navigation
-        currentIndex={displayIndex}
-        totalSlides={slides.length}
-        onNext={onNextAction}
-        onPrev={onPrevAction}
-        onToggleFullscreen={toggleFullscreen}
-        isFullscreen={isFullscreen}
-        onOpenPresenter={openPresenterWindow}
-        isPresenterWindow={isPresenterWindow}
-      />
+      {!isPresenterWindow ? (
+        <Navigation
+          currentIndex={displayIndex}
+          totalSlides={slides.length}
+          onNext={onNextAction}
+          onPrev={onPrevAction}
+          onToggleFullscreen={toggleFullscreen}
+          isFullscreen={isFullscreen}
+          onOpenPresenter={openPresenterWindow}
+          isPresenterWindow={isPresenterWindow}
+        />
+      ) : null}
 
       {!focusMode && !isPresenterWindow && displayIndex === 0 ? (
         <SlideDots
