@@ -205,7 +205,7 @@ export default function SlideContent({ slide, isActive, revealStep = 0 }) {
             </RevealBlock>
           </div>
           <div className="identity-video-wrap reveal" style={{ animationDelay: '0.25s' }}>
-            <video className="identity-video" controls preload="metadata">
+            <video className="identity-video" controls preload="auto" playsInline>
               <source src={slide.videoFile} type="video/mp4" />
             </video>
           </div>
@@ -400,14 +400,14 @@ export default function SlideContent({ slide, isActive, revealStep = 0 }) {
             <div className="legacy-video-stack">
               <div className="legacy-video-card">
                 <p className="legacy-video-label">Performance 1</p>
-                <video className="legacy-video" controls preload="metadata">
+                <video className="legacy-video" controls preload="auto" playsInline>
                   <source src={slide.videoFile} type="video/mp4" />
                 </video>
               </div>
               {slide.secondVideoFile ? (
                 <div className="legacy-video-card">
                   <p className="legacy-video-label">Performance 2</p>
-                  <video className="legacy-video" controls preload="metadata">
+                  <video className="legacy-video" controls preload="auto" playsInline>
                     <source src={slide.secondVideoFile} type="video/mp4" />
                   </video>
                 </div>

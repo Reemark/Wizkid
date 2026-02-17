@@ -46,19 +46,36 @@ export default function Slide({ slide, direction, children, onReveal, background
     >
       <div className="slide-background" aria-hidden="true">
         {slide.backgroundYoutubeId ? (
-          <iframe
-            className="slide-media slide-media-youtube"
-            src={`https://www.youtube.com/embed/${slide.backgroundYoutubeId}?autoplay=1&mute=${backgroundVideoMuted ? 1 : 0}&controls=0&loop=1&playlist=${slide.backgroundYoutubeId}&modestbranding=1&rel=0&playsinline=1`}
-            title={`${slide.title} background video`}
-            allow="autoplay; encrypted-media; picture-in-picture"
-            allowFullScreen
-          />
+          <>
+            {slide.backgroundVideoFallback ? (
+              <video
+                autoPlay
+                muted
+                loop
+                playsInline
+                preload="auto"
+                className="slide-media slide-media-cinematic slide-media-fallback"
+              >
+                <source src={slide.backgroundVideoFallback} type="video/mp4" />
+              </video>
+            ) : null}
+
+            <iframe
+              className="slide-media slide-media-youtube"
+              src={`https://www.youtube.com/embed/${slide.backgroundYoutubeId}?autoplay=1&mute=${backgroundVideoMuted ? 1 : 0}&controls=0&loop=1&playlist=${slide.backgroundYoutubeId}&modestbranding=1&rel=0&playsinline=1&enablejsapi=1`}
+              title={`${slide.title} background video`}
+              loading="eager"
+              allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
+              allowFullScreen
+            />
+          </>
         ) : slide.backgroundVideo || slide.isVideoBackground ? (
           <video
             autoPlay
             muted
             loop
             playsInline
+            preload="auto"
             className="slide-media slide-media-cinematic"
             style={{ transform: `scale(1.08) translate3d(${parallax.x}px, ${parallax.y}px, 0)` }}
           >

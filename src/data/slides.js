@@ -111,6 +111,7 @@ export const slides = [
     key: 'message',
     title: 'Inspirational Message',
     backgroundYoutubeId: 'jR3y0bxKAvg',
+    backgroundVideoFallback: assetUrl('wizkid-live.mp4'),
     revealSteps: 2,
     notes: "Opening: To conclude, let me leave you with one clear message. Main message: Wizkid proves that African excellence can lead on the global stage without losing its identity. Evidence: from Lagos origins to international recognition, his trajectory demonstrates possibility, discipline, and vision. Closing line: thank you for your attention, and I hope this presentation showed why his impact is both artistic and historical.",
     targetTime: '1:00',
