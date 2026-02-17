@@ -1,0 +1,130 @@
+/* Glassmorphism Classes */
+
+/* Base Glass Card */
+.glass-card {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 20px;
+  box-shadow: var(--shadow-3d);
+}
+
+/* Premium Glass Card with Gradient Border */
+.glass-card-premium {
+  background: linear-gradient(135deg, rgba(255, 220, 130, 0.15), rgba(46, 210, 160, 0.1));
+  backdrop-filter: blur(24px) saturate(200%);
+  -webkit-backdrop-filter: blur(24px) saturate(200%);
+  border: 2px solid transparent;
+  border-radius: 20px;
+  box-shadow: var(--shadow-3d);
+  position: relative;
+}
+
+.glass-card-premium::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: inherit;
+  padding: 2px;
+  background: linear-gradient(135deg, rgba(255, 220, 130, 0.5), rgba(46, 210, 160, 0.5));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* 3D Card Effects */
+.card-3d {
+  transform-style: preserve-3d;
+  transition: transform var(--transform-speed) cubic-bezier(0.23, 1, 0.32, 1), box-shadow var(--transform-speed) cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.card-3d:hover {
+  transform: translateY(-12px) rotateX(5deg) rotateY(-5deg) scale(1.02);
+  box-shadow: var(--shadow-3d-hover);
+}
+
+/* 3D Inner Elements */
+.card-3d-inner {
+  transform: translateZ(40px);
+}
+
+/* Parallax Layers for Depth */
+.parallax-layer-1 {
+  transform: translateZ(20px);
+}
+
+.parallax-layer-2 {
+  transform: translateZ(40px);
+}
+
+.parallax-layer-3 {
+  transform: translateZ(60px);
+}
+
+/* Holographic Border Effect */
+.holographic-border {
+  position: relative;
+  overflow: hidden;
+}
+
+.holographic-border::after {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  background: linear-gradient(90deg, transparent, rgba(255, 220, 130, 0.8), rgba(46, 210, 160, 0.8), transparent);
+  background-size: 200% 100%;
+  animation: holographic 3s linear infinite;
+  opacity: 0;
+  transition: opacity 0.3s;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.holographic-border:hover::after {
+  opacity: 1;
+}
+
+/* Frosted Glass */
+.frosted-glass {
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(32px);
+  -webkit-backdrop-filter: blur(32px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Glass Button */
+.glass-button {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.08));
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 0.85rem 1.35rem;
+  border-radius: 999px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+  color: var(--text);
+}
+
+.glass-button:hover {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.12));
+  transform: translateY(-3px);
+  box-shadow: 0 14px 28px rgba(255, 255, 255, 0.15);
+}
+
+/* Glass Badge */
+.glass-badge {
+  background: linear-gradient(135deg, rgba(255, 220, 130, 0.2), rgba(46, 210, 160, 0.15));
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 220, 130, 0.3);
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}

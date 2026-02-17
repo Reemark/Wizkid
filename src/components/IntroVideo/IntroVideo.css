@@ -1,0 +1,41 @@
+/* IntroVideo Component Styles */
+
+.intro-video-screen {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  padding: clamp(1rem, 3vw, 2rem);
+  display: grid;
+  place-items: center;
+  background:
+    radial-gradient(circle at 16% 20%, rgba(56, 187, 151, 0.4), transparent 50%),
+    radial-gradient(circle at 82% 86%, rgba(255, 176, 77, 0.35), transparent 52%),
+    linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #4facfe 75%, #00f2fe 100%);
+  background-attachment: fixed;
+}
+
+.intro-video-screen .video-card {
+  width: min(1200px, 94vw);
+  aspect-ratio: 16 / 9;
+}
+
+.intro-video-full {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+.intro-video-actions {
+  position: absolute;
+  z-index: 2;
+  right: clamp(0.8rem, 2vw, 1.3rem);
+  bottom: clamp(0.8rem, 2vw, 1.3rem);
+}
+
+@media (max-width: 980px) {
+  .intro-video-actions {
+    right: 0.6rem;
+    bottom: 0.6rem;
+  }
+}

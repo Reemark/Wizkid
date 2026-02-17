@@ -1,0 +1,66 @@
+/* Responsive Design - Media Queries */
+
+/* Mobile Devices (< 640px) */
+@media (max-width: 640px) {
+  :root {
+    --perspective: 800px;
+  }
+
+  /* Reduce 3D effects on mobile for performance */
+  .card-3d:hover {
+    transform: translateY(-6px) scale(1.01);
+  }
+
+  /* Simplify animations */
+  .glass-card,
+  .glass-card-premium {
+    backdrop-filter: blur(12px) saturate(150%);
+    -webkit-backdrop-filter: blur(12px) saturate(150%);
+  }
+}
+
+/* Tablet Devices (640px - 1024px) */
+@media (min-width: 640px) and (max-width: 1024px) {
+  :root {
+    --perspective: 1000px;
+  }
+}
+
+/* Desktop (> 1024px) */
+@media (min-width: 1024px) {
+  /* Full effects enabled */
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .card-3d:hover {
+    transform: none;
+  }
+}
+
+/* High Contrast Mode */
+@media (prefers-contrast: high) {
+  .glass-card,
+  .glass-card-premium {
+    border-width: 2px;
+    border-color: rgba(255, 255, 255, 0.5);
+  }
+}
+
+/* Dark Mode (default) */
+@media (prefers-color-scheme: dark) {
+  /* Already dark by default */
+}
+
+/* Light Mode Support (optional future enhancement) */
+@media (prefers-color-scheme: light) {
+  /* Could add light theme variables here if needed */
+}
