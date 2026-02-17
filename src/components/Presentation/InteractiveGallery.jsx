@@ -1,10 +1,11 @@
 import { useState } from 'react';
+import { assetUrl } from '../../utils/assetUrl';
 
 const galleryItems = [
-  { src: '/Wizkid.webp', title: 'Performance Energy' },
-  { src: '/Wizkid.webp', title: 'Global Stage Presence' },
-  { src: '/Wizkid.webp', title: 'African Excellence' },
-  { src: '/Wizkid.webp', title: 'Fashion and Identity' },
+  { src: assetUrl('Wizkid.webp'), title: 'Performance Energy' },
+  { src: assetUrl('Wizkid.webp'), title: 'Global Stage Presence' },
+  { src: assetUrl('Wizkid.webp'), title: 'African Excellence' },
+  { src: assetUrl('Wizkid.webp'), title: 'Fashion and Identity' },
 ];
 
 export default function InteractiveGallery() {

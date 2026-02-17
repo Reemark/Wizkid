@@ -1,17 +1,18 @@
 import { useEffect, useRef, useState } from 'react';
+import { assetUrl } from '../../utils/assetUrl';
 
 const BASE_VOLUME = 0.22;
 
 function getTrackForSlide(activeIndex) {
   if (activeIndex <= 4) {
-    return '/wizkid-opening.mp4';
+    return assetUrl('wizkid-opening.mp4');
   }
 
   if (activeIndex <= 8) {
-    return '/wizkid-performance.mp4';
+    return assetUrl('wizkid-performance.mp4');
   }
 
-  return '/wizkid-live.mp4';
+  return assetUrl('wizkid-live.mp4');
 }
 
 export default function AudioControl({ activeIndex }) {

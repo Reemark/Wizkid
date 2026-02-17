@@ -1,3 +1,5 @@
+import { assetUrl } from '../utils/assetUrl';
+
 export const slides = [
   {
     id: 1,
@@ -6,7 +8,7 @@ export const slides = [
     subtitle: 'From Lagos to Global Greatness',
     presenter: 'Prepared by: Your Name',
     date: 'February 16, 2026',
-    backgroundVideo: '/wizkid-opening.mp4',
+    backgroundVideo: assetUrl('wizkid-opening.mp4'),
     revealSteps: 3,
   },
   {
@@ -15,7 +17,7 @@ export const slides = [
     title: 'Who Is Wizkid?',
     backgroundImage:
       'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&w=1920&q=80',
-    videoFile: '/WhatsApp Video 2026-02-16 at 11.40.28.mp4',
+    videoFile: assetUrl('WhatsApp Video 2026-02-16 at 11.40.28.mp4'),
     revealSteps: 3,
   },
   {
@@ -46,7 +48,7 @@ export const slides = [
     id: 6,
     key: 'afrobeats',
     title: 'Afrobeats Revolution',
-    backgroundImage: '/wizkid-live.mp4',
+    backgroundImage: assetUrl('wizkid-live.mp4'),
     isVideoBackground: true,
     revealSteps: 3,
   },
@@ -62,7 +64,7 @@ export const slides = [
     id: 8,
     key: 'videos',
     title: 'Video Experience',
-    backgroundImage: '/wizkid-performance.mp4',
+    backgroundImage: assetUrl('wizkid-performance.mp4'),
     isVideoBackground: true,
     revealSteps: 2,
   },
@@ -72,8 +74,8 @@ export const slides = [
     title: 'Influence & Legacy',
     backgroundImage:
       'https://images.unsplash.com/photo-1501386761578-eac5c94b800a?auto=format&fit=crop&w=1920&q=80',
-    videoFile: '/WhatsApp Video 2026-02-16 at 19.57.27 (1) (1).mp4',
-    secondVideoFile: '/WhatsApp Video 2026-02-16 at 19.57.27.mp4',
+    videoFile: assetUrl('WhatsApp Video 2026-02-16 at 19.57.27 (1) (1).mp4'),
+    secondVideoFile: assetUrl('WhatsApp Video 2026-02-16 at 19.57.27.mp4'),
     revealSteps: 4,
   },
   {
@@ -88,7 +90,7 @@ export const slides = [
     id: 11,
     key: 'message',
     title: 'Inspirational Message',
-    backgroundVideo: '/wizkid-live.mp4',
+    backgroundVideo: assetUrl('wizkid-live.mp4'),
     revealSteps: 2,
   },
 ];
