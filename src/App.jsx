@@ -36,7 +36,6 @@ export default function App() {
     activeIndex: 0,
     direction: 1,
     revealStep: 0,
-    elapsedSeconds: 0,
   });
   const [notesBySlide, setNotesBySlide] = useState(() => {
     try {
@@ -144,7 +143,7 @@ export default function App() {
   const displayIndex = isPresenterWindow ? remoteState.activeIndex : activeIndex;
   const displayDirection = isPresenterWindow ? remoteState.direction : direction;
   const displayRevealStep = isPresenterWindow ? remoteState.revealStep : revealStep;
-  const displayElapsedSeconds = isPresenterWindow ? remoteState.elapsedSeconds : elapsedSeconds;
+  const displayElapsedSeconds = elapsedSeconds;
   const activeSlide = slides[displayIndex] ?? slides[0];
   const isBackgroundYoutubeSlide = Boolean(activeSlide.backgroundYoutubeId);
   const maxRevealSteps = activeSlide.revealSteps ?? 0;
@@ -204,10 +203,9 @@ export default function App() {
         activeIndex,
         direction,
         revealStep,
-        elapsedSeconds,
       },
     });
-  }, [activeIndex, direction, elapsedSeconds, isPresenterWindow, postSyncMessage, revealStep]);
+  }, [activeIndex, direction, isPresenterWindow, postSyncMessage, revealStep]);
 
   const handleReveal = useCallback(() => {
     if (isPresenterWindow) {
@@ -279,7 +277,8 @@ export default function App() {
   }, [toggleFullscreen]);
 
   useEffect(() => {
-    if (isPresenterWindow) {
+    const shouldRunTimer = isPresenterWindow || (!focusMode && showPresenter);
+    if (!shouldRunTimer) {
       return;
     }
 
@@ -288,7 +287,7 @@ export default function App() {
     }, 1000);
 
     return () => window.clearInterval(timer);
-  }, [isPresenterWindow]);
+  }, [focusMode, isPresenterWindow, showPresenter]);
 
   useEffect(() => {
     if (isPresenterWindow) {
