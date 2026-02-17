@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { ComposableMap, Geographies, Geography, Line, Marker } from 'react-simple-maps';
 import AnimatedCounter from '../shared/AnimatedCounter';
 import InteractiveGallery from './InteractiveGallery';
+import { assetUrl } from '../../utils/assetUrl';
 
 function FactCard({ label, value, delay = '0s' }) {
   return (
@@ -60,14 +61,15 @@ const wizkidWebImages = {
   instagramProfile: 'https://cdn.hypeauditor.com/img/instagram/user/29071770.jpg?sign=26f556de0aa9b3f957d7a4a56898399f&till=1771333200&w=150',
 };
 
-const bsgThumbnail = 'https://i.ytimg.com/vi/m77FDcKg96Q/maxresdefault.jpg';
+const grammyTrophyImage = 'https://www.yabaleftonline.ng/wp-content/uploads/2021/06/wiz-p.jpg';
+const localFallbackImage = assetUrl('Wizkid.webp');
 
 function WizkidImageStrip() {
   return (
     <div className="wizkid-strip">
-      <img src={wizkidWebImages.grammyPortrait} alt="Wizkid portrait" loading="lazy" />
-      <img src={wizkidWebImages.canex2025} alt="Wizkid live in Algiers 2025" loading="lazy" />
-      <img src={wizkidWebImages.stageClassic} alt="Wizkid performing on stage" loading="lazy" />
+      <img src={wizkidWebImages.grammyPortrait} alt="Wizkid portrait" loading="lazy" onError={(event) => { event.currentTarget.src = localFallbackImage; }} />
+      <img src={wizkidWebImages.canex2025} alt="Wizkid live in Algiers 2025" loading="lazy" onError={(event) => { event.currentTarget.src = localFallbackImage; }} />
+      <img src={wizkidWebImages.stageClassic} alt="Wizkid performing on stage" loading="lazy" onError={(event) => { event.currentTarget.src = localFallbackImage; }} />
     </div>
   );
 }
@@ -311,7 +313,12 @@ export default function SlideContent({ slide, isActive, revealStep = 0 }) {
           <h2 className="slide-title reveal">Awards & Records</h2>
           <RevealBlock step={1} revealStep={revealStep}>
             <article className="grammy-highlight">
-              <img src={bsgThumbnail} alt="Brown Skin Girl featuring Beyonce and Wizkid" loading="lazy" />
+              <img
+                src={grammyTrophyImage}
+                alt="Grammy Award trophy"
+                loading="lazy"
+                onError={(event) => { event.currentTarget.src = localFallbackImage; }}
+              />
               <div className="grammy-highlight-copy">
                 <p className="fact-label">2021 Grammy - Best Music Video</p>
                 <p className="fact-value">Brown Skin Girl: Beyonce, Blue Ivy, SAINt JHN & Wizkid</p>
@@ -381,12 +388,10 @@ export default function SlideContent({ slide, isActive, revealStep = 0 }) {
       return (
         <div className="content-stack wide legacy-layout">
           <div className="legacy-header">
-            <h2 className="slide-title">Influence & Legacy</h2>
-            <RevealBlock step={1} revealStep={revealStep}>
-              <p className="slide-lead">Beyond music, Wizkid shaped how African creativity is perceived in fashion, media, and youth culture.</p>
-            </RevealBlock>
+            <h2 className="legacy-title-plain">INFLUENCE & LEGACY</h2>
+            <p className="slide-lead">Beyond music, Wizkid shaped how African creativity is perceived in fashion, media, and youth culture.</p>
           </div>
-          <RevealBlock step={2} revealStep={revealStep} className="legacy-video-wrap">
+          <div className="legacy-video-wrap">
             <div className="legacy-video-stack">
               <div className="legacy-video-card">
                 <p className="legacy-video-label">Performance 1</p>
@@ -403,26 +408,18 @@ export default function SlideContent({ slide, isActive, revealStep = 0 }) {
                 </div>
               ) : null}
             </div>
-          </RevealBlock>
-          <RevealBlock step={3} revealStep={revealStep}>
-            <div className="legacy-grid">
-              <FactCard label="Artists" value="A whole new generation inspired" delay="0.1s" />
-              <FactCard label="Fashion" value="Style references worldwide" delay="0.15s" />
-              <FactCard label="Culture" value="African identity amplified" delay="0.2s" />
-              <FactCard label="Reputation" value="Global respect sustained" delay="0.25s" />
-            </div>
-          </RevealBlock>
-          <RevealBlock step={4} revealStep={revealStep} className="icon-row">
+          </div>
+          <div className="legacy-grid">
+            <FactCard label="Artists" value="A whole new generation inspired" delay="0.1s" />
+            <FactCard label="Fashion" value="Style references worldwide" delay="0.15s" />
+            <FactCard label="Culture" value="African identity amplified" delay="0.2s" />
+            <FactCard label="Reputation" value="Global respect sustained" delay="0.25s" />
+          </div>
+          <div className="icon-row">
             <IconBadge type="music" label="Influence" />
             <IconBadge type="star" label="Legacy" />
             <IconBadge type="globe" label="Impact" />
-          </RevealBlock>
-          <RevealBlock step={4} revealStep={revealStep}>
-            <div className="wizkid-portraits">
-              <img src={wizkidWebImages.stageCloseup} alt="Wizkid closeup performance" loading="lazy" />
-              <img src={wizkidWebImages.instagramProfile} alt="Wizkid profile photo from Instagram data" loading="lazy" />
-            </div>
-          </RevealBlock>
+          </div>
         </div>
       );
 

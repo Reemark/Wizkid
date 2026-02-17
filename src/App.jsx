@@ -14,9 +14,11 @@ export default function App() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [direction, setDirection] = useState(1);
   const [revealStep, setRevealStep] = useState(0);
+  const [isFullscreen, setIsFullscreen] = useState(Boolean(document.fullscreenElement));
   const lockRef = useRef(false);
   const revealStepRef = useRef(0);
   const maxRevealRef = useRef(0);
+  const appRef = useRef(null);
 
   const goToNext = useCallback(() => {
     if (revealStepRef.current < maxRevealRef.current) {
@@ -103,8 +105,40 @@ export default function App() {
     });
   }, [maxRevealSteps]);
 
+  const toggleFullscreen = useCallback(async () => {
+    try {
+      if (!document.fullscreenElement) {
+        await (appRef.current ?? document.documentElement).requestFullscreen();
+      } else {
+        await document.exitFullscreen();
+      }
+    } catch (_) {
+      // Ignore browser-level fullscreen permission errors.
+    }
+  }, []);
+
+  useEffect(() => {
+    const onFullscreenChange = () => {
+      setIsFullscreen(Boolean(document.fullscreenElement));
+    };
+
+    const onKeyDown = (event) => {
+      if (event.key.toLowerCase() === 'f') {
+        event.preventDefault();
+        toggleFullscreen();
+      }
+    };
+
+    document.addEventListener('fullscreenchange', onFullscreenChange);
+    window.addEventListener('keydown', onKeyDown);
+    return () => {
+      document.removeEventListener('fullscreenchange', onFullscreenChange);
+      window.removeEventListener('keydown', onKeyDown);
+    };
+  }, [toggleFullscreen]);
+
   return (
-    <main className="app-shell">
+    <main className="app-shell" ref={appRef}>
       <ProgressBar progress={progress} />
       <p className="slide-meta">{activeSlide.title}</p>
 
@@ -117,13 +151,17 @@ export default function App() {
         totalSlides={slides.length}
         onNext={goToNext}
         onPrev={goToPrevious}
+        onToggleFullscreen={toggleFullscreen}
+        isFullscreen={isFullscreen}
       />
 
-      <SlideDots
-        slides={slides}
-        activeIndex={activeIndex}
-        onSelect={goToIndex}
-      />
+      {activeIndex === 0 ? (
+        <SlideDots
+          slides={slides}
+          activeIndex={activeIndex}
+          onSelect={goToIndex}
+        />
+      ) : null}
 
       <AudioControl activeIndex={activeIndex} />
 
