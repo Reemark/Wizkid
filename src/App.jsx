@@ -291,6 +291,10 @@ export default function App() {
   }, [isPresenterWindow]);
 
   useEffect(() => {
+    if (isPresenterWindow) {
+      return;
+    }
+
     const preloadMedia = (src) => {
       if (!src || preloadedMediaRef.current.has(src)) {
         return;
@@ -318,7 +322,7 @@ export default function App() {
       preloadMedia(slide.videoFile);
       preloadMedia(slide.secondVideoFile);
     });
-  }, [displayIndex]);
+  }, [displayIndex, isPresenterWindow]);
 
   useEffect(() => {
     try {
@@ -356,6 +360,7 @@ export default function App() {
         key={activeSlide.id}
         onReveal={isPresenterWindow ? undefined : handleReveal}
         backgroundVideoMuted={backgroundVideoMuted}
+        disableMediaPlayback={isPresenterWindow}
       >
         <SlideContent slide={activeSlide} isActive revealStep={displayRevealStep} />
       </Slide>

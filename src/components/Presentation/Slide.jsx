@@ -14,9 +14,22 @@ function slideClassByDirection(direction) {
 
 const INTERACTIVE_SELECTOR = 'button, a, input, textarea, select, iframe, video';
 
-export default function Slide({ slide, direction, children, onReveal, backgroundVideoMuted = true }) {
+function isVideoAsset(value = '') {
+  return /\.mp4($|\?)/i.test(value);
+}
+
+export default function Slide({
+  slide,
+  direction,
+  children,
+  onReveal,
+  backgroundVideoMuted = true,
+  disableMediaPlayback = false,
+}) {
   const animationClass = useMemo(() => slideClassByDirection(direction), [direction]);
   const [parallax, setParallax] = useState({ x: 0, y: 0 });
+  const fallbackImage = !isVideoAsset(slide.backgroundImage) ? slide.backgroundImage : null;
+  const showStaticPresenterMedia = disableMediaPlayback;
 
   const handleMouseMove = (event) => {
     const x = ((event.clientX / window.innerWidth) - 0.5) * -14;
@@ -45,7 +58,18 @@ export default function Slide({ slide, direction, children, onReveal, background
       onClick={handleClick}
     >
       <div className="slide-background" aria-hidden="true">
-        {slide.backgroundYoutubeId ? (
+        {showStaticPresenterMedia ? (
+          fallbackImage ? (
+            <img
+              src={fallbackImage}
+              alt=""
+              className="slide-media slide-media-cinematic"
+              style={{ transform: `scale(1.08) translate3d(${parallax.x}px, ${parallax.y}px, 0)` }}
+            />
+          ) : (
+            <div className="slide-media slide-media-static" />
+          )
+        ) : slide.backgroundYoutubeId ? (
           <>
             {slide.backgroundVideoFallback ? (
               <video
