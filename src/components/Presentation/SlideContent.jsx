@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { ComposableMap, Geographies, Geography, Line, Marker } from 'react-simple-maps';
 import AnimatedCounter from '../shared/AnimatedCounter';
 import InteractiveGallery from './InteractiveGallery';
 
@@ -50,6 +51,84 @@ const videoCards = [
     description: 'Une presence scenique qui captive tout le public.',
   },
 ];
+
+const wizkidWebImages = {
+  grammyPortrait: 'https://i8.amplience.net/i/naras/wizkid_MI0005473154-MN0003081520',
+  stageClassic: 'https://upload.wikimedia.org/wikipedia/commons/c/cc/Wizkid_at_Iyanya%27s_album_launch_concert%2C_2013.jpg',
+  stageCloseup: 'https://upload.wikimedia.org/wikipedia/commons/0/0a/Wizkid_at_Iyanya%27s_album_launch_concert%2C_2013_%28cropped%29.jpg',
+  canex2025: 'https://upload.wikimedia.org/wikipedia/commons/d/d4/Wizkid_in_Canex_-_Algiers_2025.jpg',
+  instagramProfile: 'https://cdn.hypeauditor.com/img/instagram/user/29071770.jpg?sign=26f556de0aa9b3f957d7a4a56898399f&till=1771333200&w=150',
+};
+
+const bsgThumbnail = 'https://i.ytimg.com/vi/m77FDcKg96Q/maxresdefault.jpg';
+
+function WizkidImageStrip() {
+  return (
+    <div className="wizkid-strip">
+      <img src={wizkidWebImages.grammyPortrait} alt="Wizkid portrait" loading="lazy" />
+      <img src={wizkidWebImages.canex2025} alt="Wizkid live in Algiers 2025" loading="lazy" />
+      <img src={wizkidWebImages.stageClassic} alt="Wizkid performing on stage" loading="lazy" />
+    </div>
+  );
+}
+
+const worldGeoUrl = 'https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json';
+
+const globalCities = [
+  { id: 'lagos', country: 'Nigeria', city: 'Lagos', coordinates: [3.3792, 6.5244] },
+  { id: 'london', country: 'United Kingdom', city: 'London', coordinates: [-0.1276, 51.5072] },
+  { id: 'new-york', country: 'United States', city: 'New York', coordinates: [-74.006, 40.7128] },
+  { id: 'toronto', country: 'Canada', city: 'Toronto', coordinates: [-79.3832, 43.6532] },
+];
+
+function WorldMapHighlights() {
+  const origin = globalCities[0].coordinates;
+
+  return (
+    <div className="world-map world-map-real">
+      <ComposableMap
+        projection="geoEqualEarth"
+        projectionConfig={{ scale: 145 }}
+        width={920}
+        height={430}
+        className="world-map-svg"
+      >
+        <Geographies geography={worldGeoUrl}>
+          {({ geographies }) =>
+            geographies.map((geo) => (
+              <Geography key={geo.rsmKey} geography={geo} className="map-country" />
+            ))
+          }
+        </Geographies>
+
+        {globalCities.slice(1).map((destination) => (
+          <Line
+            key={`line-${destination.id}`}
+            from={origin}
+            to={destination.coordinates}
+            stroke="#d5b56e"
+            strokeWidth={1.2}
+            strokeLinecap="round"
+            strokeDasharray="4 4"
+            className="map-connection"
+          />
+        ))}
+
+        {globalCities.map((place) => (
+          <Marker key={place.id} coordinates={place.coordinates}>
+            <g className="map-pin">
+              <circle r={4.5} />
+              <circle r={9} className="map-pin-ring" />
+            </g>
+            <text x={10} y={-10} className="map-label">
+              {place.city}, {place.country}
+            </text>
+          </Marker>
+        ))}
+      </ComposableMap>
+    </div>
+  );
+}
 
 export default function SlideContent({ slide, isActive, revealStep = 0 }) {
   const [activeVideo, setActiveVideo] = useState(null);
@@ -119,6 +198,9 @@ export default function SlideContent({ slide, isActive, revealStep = 0 }) {
                 <FactCard label="Identity" value="African Excellence" delay="0.2s" />
               </div>
             </RevealBlock>
+            <RevealBlock step={3} revealStep={revealStep}>
+              <WizkidImageStrip />
+            </RevealBlock>
           </div>
           <div className="identity-video-wrap reveal" style={{ animationDelay: '0.25s' }}>
             <video className="identity-video" controls preload="metadata">
@@ -179,12 +261,7 @@ export default function SlideContent({ slide, isActive, revealStep = 0 }) {
             <p className="slide-lead">One Dance with Drake transformed Wizkid from continental star to global chart authority.</p>
           </RevealBlock>
           <RevealBlock step={2} revealStep={revealStep}>
-            <div className="world-map">
-              <div className="map-dot lagos">Nigeria</div>
-              <div className="map-dot london">United Kingdom</div>
-              <div className="map-dot newyork">United States</div>
-              <div className="map-dot toronto">Canada</div>
-            </div>
+            <WorldMapHighlights />
           </RevealBlock>
           <RevealBlock step={3} revealStep={revealStep} className="global-metrics">
             <span>#1 in multiple countries</span>
@@ -232,6 +309,16 @@ export default function SlideContent({ slide, isActive, revealStep = 0 }) {
       return (
         <div className="content-stack wide">
           <h2 className="slide-title reveal">Awards & Records</h2>
+          <RevealBlock step={1} revealStep={revealStep}>
+            <article className="grammy-highlight">
+              <img src={bsgThumbnail} alt="Brown Skin Girl featuring Beyonce and Wizkid" loading="lazy" />
+              <div className="grammy-highlight-copy">
+                <p className="fact-label">2021 Grammy - Best Music Video</p>
+                <p className="fact-value">Brown Skin Girl: Beyonce, Blue Ivy, SAINt JHN & Wizkid</p>
+                <p>Victoire historique partagee avec Beyonce.</p>
+              </div>
+            </article>
+          </RevealBlock>
           <RevealBlock step={1} revealStep={revealStep}>
             <div className="counters-grid trophy-grid">
               <article className="glass-card"><p className="fact-label">Grammy</p><p className="fact-value">Winner</p></article>
@@ -323,6 +410,12 @@ export default function SlideContent({ slide, isActive, revealStep = 0 }) {
             <IconBadge type="music" label="Influence" />
             <IconBadge type="star" label="Legacy" />
             <IconBadge type="globe" label="Impact" />
+          </RevealBlock>
+          <RevealBlock step={4} revealStep={revealStep}>
+            <div className="wizkid-portraits">
+              <img src={wizkidWebImages.stageCloseup} alt="Wizkid closeup performance" loading="lazy" />
+              <img src={wizkidWebImages.instagramProfile} alt="Wizkid profile photo from Instagram data" loading="lazy" />
+            </div>
           </RevealBlock>
         </div>
       );

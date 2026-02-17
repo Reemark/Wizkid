@@ -16,7 +16,7 @@ export const slides = [
     key: 'identity',
     title: 'Who Is Wizkid?',
     backgroundImage:
-      'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&w=1920&q=80',
+      'https://i8.amplience.net/i/naras/wizkid_MI0005473154-MN0003081520',
     videoFile: assetUrl('WhatsApp Video 2026-02-16 at 11.40.28.mp4'),
     revealSteps: 3,
   },
@@ -33,7 +33,7 @@ export const slides = [
     key: 'stardom',
     title: 'Rise to Stardom',
     backgroundImage:
-      'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?auto=format&fit=crop&w=1920&q=80',
+      'https://upload.wikimedia.org/wikipedia/commons/c/cc/Wizkid_at_Iyanya%27s_album_launch_concert%2C_2013.jpg',
     revealSteps: 3,
   },
   {
@@ -83,7 +83,7 @@ export const slides = [
     key: 'greatest',
     title: 'Why He Is the Greatest African Artist',
     backgroundImage:
-      'https://images.unsplash.com/photo-1504704911898-68304a7d2807?auto=format&fit=crop&w=1920&q=80',
+      'https://upload.wikimedia.org/wikipedia/commons/d/d4/Wizkid_in_Canex_-_Algiers_2025.jpg',
     revealSteps: 3,
   },
   {
