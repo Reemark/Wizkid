@@ -14,7 +14,7 @@ function slideClassByDirection(direction) {
 
 const INTERACTIVE_SELECTOR = 'button, a, input, textarea, select, iframe, video';
 
-export default function Slide({ slide, direction, children, onReveal }) {
+export default function Slide({ slide, direction, children, onReveal, backgroundVideoMuted = true }) {
   const animationClass = useMemo(() => slideClassByDirection(direction), [direction]);
   const [parallax, setParallax] = useState({ x: 0, y: 0 });
 
@@ -39,18 +39,27 @@ export default function Slide({ slide, direction, children, onReveal }) {
       className={`slide ${animationClass}`}
       aria-label={`Slide ${slide.id}: ${slide.title}`}
       data-slide-key={slide.key}
+      data-direction={direction > 0 ? 'forward' : 'backward'}
       onMouseMove={handleMouseMove}
       onMouseLeave={() => setParallax({ x: 0, y: 0 })}
       onClick={handleClick}
     >
       <div className="slide-background" aria-hidden="true">
-        {slide.backgroundVideo || slide.isVideoBackground ? (
+        {slide.backgroundYoutubeId ? (
+          <iframe
+            className="slide-media slide-media-youtube"
+            src={`https://www.youtube.com/embed/${slide.backgroundYoutubeId}?autoplay=1&mute=${backgroundVideoMuted ? 1 : 0}&controls=0&loop=1&playlist=${slide.backgroundYoutubeId}&modestbranding=1&rel=0&playsinline=1`}
+            title={`${slide.title} background video`}
+            allow="autoplay; encrypted-media; picture-in-picture"
+            allowFullScreen
+          />
+        ) : slide.backgroundVideo || slide.isVideoBackground ? (
           <video
             autoPlay
             muted
             loop
             playsInline
-            className="slide-media"
+            className="slide-media slide-media-cinematic"
             style={{ transform: `scale(1.08) translate3d(${parallax.x}px, ${parallax.y}px, 0)` }}
           >
             <source src={slide.backgroundVideo || slide.backgroundImage} type="video/mp4" />
@@ -59,7 +68,7 @@ export default function Slide({ slide, direction, children, onReveal }) {
           <img
             src={slide.backgroundImage}
             alt="Wizkid"
-            className="slide-media"
+            className="slide-media slide-media-cinematic"
             style={{ transform: `scale(1.08) translate3d(${parallax.x}px, ${parallax.y}px, 0)` }}
           />
         )}

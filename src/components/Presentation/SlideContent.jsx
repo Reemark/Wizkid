@@ -220,7 +220,7 @@ export default function SlideContent({ slide, isActive, revealStep = 0 }) {
             <p className="slide-lead">From the streets of Lagos to global arenas, his rise started with discipline and obsession.</p>
           </RevealBlock>
           <RevealBlock step={2} revealStep={revealStep}>
-            <div className="timeline-row">
+            <div className="timeline-row timeline-sequence">
               <article className="timeline-node"><p className="timeline-year">1990</p><p>Born in Lagos</p></article>
               <article className="timeline-node"><p className="timeline-year">11 Years</p><p>First recording sessions</p></article>
               <article className="timeline-node"><p className="timeline-year">Teen Years</p><p>First group: Glorious Five</p></article>
@@ -239,7 +239,7 @@ export default function SlideContent({ slide, isActive, revealStep = 0 }) {
         <div className="content-stack wide">
           <h2 className="slide-title reveal">Rise to Stardom</h2>
           <RevealBlock step={1} revealStep={revealStep}>
-            <div className="stardom-board">
+            <div className="stardom-board timeline-sequence">
               <FactCard label="Breakout" value="Holla at Your Boy" delay="0.05s" />
               <FactCard label="Debut Album" value="Superstar (2011)" delay="0.1s" />
               <FactCard label="Effect" value="Pan-African Phenomenon" delay="0.15s" />
@@ -323,6 +323,11 @@ export default function SlideContent({ slide, isActive, revealStep = 0 }) {
                 <p className="fact-label">2021 Grammy - Best Music Video</p>
                 <p className="fact-value">Brown Skin Girl: Beyonce, Blue Ivy, SAINt JHN & Wizkid</p>
                 <p>Victoire historique partagee avec Beyonce.</p>
+                <div className="grammy-badge-row">
+                  <span className="grammy-badge">Winner</span>
+                  <span className="grammy-badge">Best Music Video</span>
+                  <span className="grammy-badge">Global Recognition</span>
+                </div>
               </div>
             </article>
           </RevealBlock>
@@ -349,7 +354,7 @@ export default function SlideContent({ slide, isActive, revealStep = 0 }) {
             <p className="slide-lead">Click a card to launch a focused playback.</p>
           </RevealBlock>
           <RevealBlock step={2} revealStep={revealStep}>
-            <div className="video-grid">
+            <div className="video-grid video-grid-premium">
               {videoCards.map((video) => (
                 <button key={video.youtubeId} type="button" className="video-card clickable-video" onClick={() => setActiveVideo(video)}>
                   <div className="video-thumb-wrap">
@@ -454,6 +459,18 @@ export default function SlideContent({ slide, isActive, revealStep = 0 }) {
           </RevealBlock>
           <RevealBlock step={2} revealStep={revealStep} className="icon-row">
             <IconBadge type="star" label="Thank You" />
+          </RevealBlock>
+          <RevealBlock step={2} revealStep={revealStep}>
+            <div className="film-strip">
+              <div className="film-strip-track">
+                <p>A story of vision, rhythm, and legacy.</p>
+                <p>From Lagos streets to global stages.</p>
+                <p>Wizkid inspired a generation.</p>
+                <p>Afrobeats became a global language.</p>
+                <p>African excellence, worldwide respect.</p>
+                <p>Thank you for watching.</p>
+              </div>
+            </div>
           </RevealBlock>
         </div>
       );

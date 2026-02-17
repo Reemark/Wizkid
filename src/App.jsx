@@ -31,6 +31,7 @@ export default function App() {
   const [showPresenter, setShowPresenter] = useState(isPresenterWindow);
   const [focusMode, setFocusMode] = useState(false);
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
+  const [backgroundVideoMuted, setBackgroundVideoMuted] = useState(true);
   const [remoteState, setRemoteState] = useState({
     activeIndex: 0,
     direction: 1,
@@ -145,6 +146,7 @@ export default function App() {
   const displayRevealStep = isPresenterWindow ? remoteState.revealStep : revealStep;
   const displayElapsedSeconds = isPresenterWindow ? remoteState.elapsedSeconds : elapsedSeconds;
   const activeSlide = slides[displayIndex] ?? slides[0];
+  const isBackgroundYoutubeSlide = Boolean(activeSlide.backgroundYoutubeId);
   const maxRevealSteps = activeSlide.revealSteps ?? 0;
   const progress = (displayIndex / (slides.length - 1)) * 100;
 
@@ -348,7 +350,13 @@ export default function App() {
       {!focusMode ? <ProgressBar progress={progress} /> : null}
       {!focusMode ? <p className="slide-meta">{activeSlide.title}</p> : null}
 
-      <Slide slide={activeSlide} direction={displayDirection} key={activeSlide.id} onReveal={isPresenterWindow ? undefined : handleReveal}>
+      <Slide
+        slide={activeSlide}
+        direction={displayDirection}
+        key={activeSlide.id}
+        onReveal={isPresenterWindow ? undefined : handleReveal}
+        backgroundVideoMuted={backgroundVideoMuted}
+      >
         <SlideContent slide={activeSlide} isActive revealStep={displayRevealStep} />
       </Slide>
 
@@ -371,7 +379,14 @@ export default function App() {
         />
       ) : null}
 
-      {!focusMode && !isPresenterWindow ? <AudioControl activeIndex={displayIndex} /> : null}
+      {!focusMode && !isPresenterWindow ? (
+        <AudioControl
+          activeIndex={displayIndex}
+          isBackgroundYoutubeSlide={isBackgroundYoutubeSlide}
+          backgroundVideoMuted={backgroundVideoMuted}
+          onToggleBackgroundVideoMuted={() => setBackgroundVideoMuted((previous) => !previous)}
+        />
+      ) : null}
 
       {!focusMode && !isPresenterWindow && maxRevealSteps > 0 && displayRevealStep < maxRevealSteps ? (
         <p className="reveal-hint">Click to reveal ({displayRevealStep}/{maxRevealSteps})</p>

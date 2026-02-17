@@ -4,6 +4,10 @@ import { assetUrl } from '../../utils/assetUrl';
 const BASE_VOLUME = 0.22;
 
 function getTrackForSlide(activeIndex) {
+  if (activeIndex >= 10) {
+    return null;
+  }
+
   if (activeIndex <= 4) {
     return assetUrl('wizkid-opening.mp4');
   }
@@ -15,7 +19,12 @@ function getTrackForSlide(activeIndex) {
   return assetUrl('wizkid-live.mp4');
 }
 
-export default function AudioControl({ activeIndex }) {
+export default function AudioControl({
+  activeIndex,
+  isBackgroundYoutubeSlide = false,
+  backgroundVideoMuted = true,
+  onToggleBackgroundVideoMuted,
+}) {
   const audioRef = useRef(null);
   const timersRef = useRef([]);
   const [isMuted, setIsMuted] = useState(true);
@@ -49,6 +58,13 @@ export default function AudioControl({ activeIndex }) {
 
     const targetTrack = getTrackForSlide(activeIndex);
     const currentTrack = audio.dataset.track;
+
+    if (!targetTrack) {
+      audio.pause();
+      audio.removeAttribute('src');
+      audio.dataset.track = '';
+      return;
+    }
 
     const swapTrack = () => {
       audio.src = targetTrack;
@@ -100,7 +116,9 @@ export default function AudioControl({ activeIndex }) {
     timersRef.current.push(fadeOutTimer);
   }, [activeIndex, isMuted]);
 
-  const buttonLabel = isMuted ? 'Unmute Music' : 'Mute Music';
+  const buttonLabel = isBackgroundYoutubeSlide
+    ? (backgroundVideoMuted ? 'Unmute Video' : 'Mute Video')
+    : (isMuted ? 'Unmute Music' : 'Mute Music');
 
   return (
     <div className="audio-control">
@@ -108,9 +126,19 @@ export default function AudioControl({ activeIndex }) {
 
       <button
         type="button"
-        onClick={() => setIsMuted((prev) => !prev)}
+        onClick={() => {
+          if (isBackgroundYoutubeSlide) {
+            if (onToggleBackgroundVideoMuted) {
+              onToggleBackgroundVideoMuted();
+            }
+            return;
+          }
+          setIsMuted((prev) => !prev);
+        }}
         className="audio-button"
-        aria-label={isMuted ? 'Unmute background music' : 'Mute background music'}
+        aria-label={isBackgroundYoutubeSlide
+          ? (backgroundVideoMuted ? 'Unmute background video' : 'Mute background video')
+          : (isMuted ? 'Unmute background music' : 'Mute background music')}
       >
         {buttonLabel}
       </button>
