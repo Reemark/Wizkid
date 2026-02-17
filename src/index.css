@@ -1,0 +1,94 @@
+@import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+html,
+body,
+#root {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+  background: #03050b;
+}
+
+body {
+  font-family: 'Space Grotesk', 'Segoe UI', sans-serif;
+}
+
+.keynote-shell {
+  background:
+    radial-gradient(circle at 18% 20%, rgba(216, 181, 111, 0.16), transparent 34%),
+    radial-gradient(circle at 80% 12%, rgba(47, 176, 127, 0.12), transparent 36%),
+    linear-gradient(145deg, #03050b 0%, #081326 58%, #03050b 100%);
+}
+
+.keynote-shell::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.06) 0.7px, transparent 0.7px);
+  background-size: 3px 3px;
+  opacity: 0.11;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.glass-panel {
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: linear-gradient(160deg, rgba(8, 17, 34, 0.8), rgba(5, 11, 22, 0.54));
+  backdrop-filter: blur(12px);
+}
+
+.typing-title {
+  width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  border-right: 3px solid #d8b56f;
+  animation: typing 2s steps(6, end) 0.2s forwards, blink 0.75s step-end infinite;
+}
+
+@keyframes typing {
+  from {
+    width: 0;
+  }
+  to {
+    width: 6.3ch;
+  }
+}
+
+@keyframes blink {
+  0%,
+  49% {
+    border-color: #d8b56f;
+  }
+  50%,
+  100% {
+    border-color: transparent;
+  }
+}
+
+@media (max-width: 768px) {
+  .mobile-scroll {
+    max-height: calc(100vh - 10rem);
+    overflow-y: auto;
+    padding-right: 0.25rem;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(216, 181, 111, 0.45) transparent;
+  }
+
+  .mobile-scroll::-webkit-scrollbar {
+    width: 5px;
+  }
+
+  .mobile-scroll::-webkit-scrollbar-thumb {
+    background: rgba(216, 181, 111, 0.45);
+    border-radius: 999px;
+  }
+}

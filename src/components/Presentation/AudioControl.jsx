@@ -1,118 +1,61 @@
 import { useEffect, useRef, useState } from 'react';
 import { assetUrl } from '../../utils/assetUrl';
 
-const BASE_VOLUME = 0.22;
+const TRACKS = [assetUrl('wizkid-opening.mp4'), assetUrl('wizkid-performance.mp4'), assetUrl('wizkid-live.mp4')];
 
-function getTrackForSlide(activeIndex) {
-  if (activeIndex <= 4) {
-    return assetUrl('wizkid-opening.mp4');
-  }
-
-  if (activeIndex <= 8) {
-    return assetUrl('wizkid-performance.mp4');
-  }
-
-  return assetUrl('wizkid-live.mp4');
+function trackForSlide(index) {
+  if (index <= 3) return TRACKS[0];
+  if (index <= 7) return TRACKS[1];
+  return TRACKS[2];
 }
 
 export default function AudioControl({ activeIndex }) {
   const audioRef = useRef(null);
-  const timersRef = useRef([]);
   const [isMuted, setIsMuted] = useState(true);
 
   useEffect(() => {
-    return () => {
-      timersRef.current.forEach((timerId) => window.clearInterval(timerId));
-      timersRef.current = [];
-    };
-  }, []);
-
-  useEffect(() => {
     const audio = audioRef.current;
+    if (!audio) return;
 
-    if (!audio) {
-      return;
-    }
-
-    audio.muted = isMuted;
-    audio.volume = BASE_VOLUME;
-  }, [isMuted]);
-
-  useEffect(() => {
-    const audio = audioRef.current;
-    if (!audio) {
-      return;
-    }
-
-    timersRef.current.forEach((timerId) => window.clearInterval(timerId));
-    timersRef.current = [];
-
-    const targetTrack = getTrackForSlide(activeIndex);
-    const currentTrack = audio.dataset.track;
-
-    const swapTrack = () => {
+    const targetTrack = trackForSlide(activeIndex);
+    if (audio.dataset.track !== targetTrack) {
       audio.src = targetTrack;
       audio.dataset.track = targetTrack;
       audio.load();
-      const playPromise = audio.play();
-      if (playPromise && typeof playPromise.catch === 'function') {
-        playPromise.catch(() => {});
-      }
-    };
+    }
 
-    if (!currentTrack) {
-      swapTrack();
+    if (activeIndex === 0) {
+      audio.pause();
       return;
     }
 
-    if (currentTrack === targetTrack) {
-      return;
+    if (!isMuted) {
+      audio.play().catch(() => {});
     }
-
-    if (isMuted) {
-      swapTrack();
-      return;
-    }
-
-    let volumeDown = audio.volume;
-    const fadeOutTimer = window.setInterval(() => {
-      volumeDown = Math.max(0, volumeDown - 0.035);
-      audio.volume = volumeDown;
-
-      if (volumeDown <= 0) {
-        window.clearInterval(fadeOutTimer);
-        swapTrack();
-
-        let volumeUp = 0;
-        const fadeInTimer = window.setInterval(() => {
-          volumeUp = Math.min(BASE_VOLUME, volumeUp + 0.035);
-          audio.volume = volumeUp;
-
-          if (volumeUp >= BASE_VOLUME) {
-            window.clearInterval(fadeInTimer);
-          }
-        }, 35);
-
-        timersRef.current.push(fadeInTimer);
-      }
-    }, 35);
-
-    timersRef.current.push(fadeOutTimer);
   }, [activeIndex, isMuted]);
 
-  const buttonLabel = isMuted ? 'Unmute Music' : 'Mute Music';
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    audio.volume = 0.2;
+    audio.muted = isMuted;
+
+    if (!isMuted && activeIndex > 0) {
+      audio.play().catch(() => {});
+    }
+  }, [isMuted, activeIndex]);
 
   return (
-    <div className="audio-control">
-      <audio ref={audioRef} loop autoPlay preload="metadata" />
-
+    <div className="fixed bottom-20 right-4 z-50 md:bottom-5">
+      <audio ref={audioRef} loop preload="metadata" />
       <button
         type="button"
         onClick={() => setIsMuted((prev) => !prev)}
-        className="audio-button"
-        aria-label={isMuted ? 'Unmute background music' : 'Mute background music'}
+        className="rounded-full border border-emerald-300/50 bg-emerald-500/10 px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.1em] text-emerald-100 backdrop-blur-lg transition hover:bg-emerald-500/20"
+        aria-label={isMuted ? 'Activer la musique' : 'Couper la musique'}
       >
-        {buttonLabel}
+        {isMuted ? 'Music Off' : 'Music On'}
       </button>
     </div>
   );
