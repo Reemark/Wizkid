@@ -362,7 +362,7 @@ export default function App() {
         backgroundVideoMuted={backgroundVideoMuted}
         disableMediaPlayback={isPresenterWindow}
       >
-        <SlideContent slide={activeSlide} isActive revealStep={displayRevealStep} />
+        <SlideContent slide={activeSlide} isActive revealStep={displayRevealStep} isPresenterPreview={isPresenterWindow} />
       </Slide>
 
       <Navigation

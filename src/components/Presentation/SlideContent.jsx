@@ -132,7 +132,7 @@ function WorldMapHighlights() {
   );
 }
 
-export default function SlideContent({ slide, isActive, revealStep = 0 }) {
+export default function SlideContent({ slide, isActive, revealStep = 0, isPresenterPreview = false }) {
   const [activeVideo, setActiveVideo] = useState(null);
 
   useEffect(() => {
@@ -205,9 +205,13 @@ export default function SlideContent({ slide, isActive, revealStep = 0 }) {
             </RevealBlock>
           </div>
           <div className="identity-video-wrap reveal" style={{ animationDelay: '0.25s' }}>
-            <video className="identity-video" controls preload="auto" playsInline>
-              <source src={slide.videoFile} type="video/mp4" />
-            </video>
+            {isPresenterPreview ? (
+              <div className="presenter-media-placeholder">Video preview disabled in presenter window</div>
+            ) : (
+              <video className="identity-video" controls preload="auto" playsInline>
+                <source src={slide.videoFile} type="video/mp4" />
+              </video>
+            )}
           </div>
         </div>
       );
@@ -279,13 +283,17 @@ export default function SlideContent({ slide, isActive, revealStep = 0 }) {
           <h2 className="slide-title reveal">Afrobeats Revolution</h2>
           <div className="afrobeats-layout">
             <div className="afrobeats-video-wrap reveal" style={{ animationDelay: '0.2s' }}>
-              <iframe
-                src="https://www.youtube.com/embed/XRXUSCBzDIg"
-                title="Wizkid - Afrobeats Revolution"
-                loading="lazy"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-              />
+              {isPresenterPreview ? (
+                <div className="presenter-media-placeholder">YouTube preview disabled in presenter window</div>
+              ) : (
+                <iframe
+                  src="https://www.youtube.com/embed/XRXUSCBzDIg"
+                  title="Wizkid - Afrobeats Revolution"
+                  loading="lazy"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                />
+              )}
             </div>
             <div className="afrobeats-copy">
               <RevealBlock step={1} revealStep={revealStep}>
@@ -356,10 +364,16 @@ export default function SlideContent({ slide, isActive, revealStep = 0 }) {
           <RevealBlock step={2} revealStep={revealStep}>
             <div className="video-grid video-grid-premium">
               {videoCards.map((video) => (
-                <button key={video.youtubeId} type="button" className="video-card clickable-video" onClick={() => setActiveVideo(video)}>
+                <button
+                  key={video.youtubeId}
+                  type="button"
+                  className="video-card clickable-video"
+                  onClick={() => !isPresenterPreview && setActiveVideo(video)}
+                  disabled={isPresenterPreview}
+                >
                   <div className="video-thumb-wrap">
                     <img src={`https://i.ytimg.com/vi/${video.youtubeId}/hqdefault.jpg`} alt={video.title} className="video-thumb" />
-                    <span className="play-badge">Play</span>
+                    <span className="play-badge">{isPresenterPreview ? 'Preview' : 'Play'}</span>
                   </div>
                   <h3>{video.title}</h3>
                   <p>{video.description}</p>
@@ -367,9 +381,9 @@ export default function SlideContent({ slide, isActive, revealStep = 0 }) {
               ))}
             </div>
           </RevealBlock>
-          <InteractiveGallery />
+          {!isPresenterPreview ? <InteractiveGallery /> : null}
 
-          {activeVideo ? (
+          {activeVideo && !isPresenterPreview ? (
             <div className="video-modal-backdrop" role="dialog" aria-modal="true" onClick={() => setActiveVideo(null)}>
               <div className="video-modal-content" onClick={(event) => event.stopPropagation()}>
                 <div className="video-modal-header">
@@ -400,16 +414,24 @@ export default function SlideContent({ slide, isActive, revealStep = 0 }) {
             <div className="legacy-video-stack">
               <div className="legacy-video-card">
                 <p className="legacy-video-label">Performance 1</p>
-                <video className="legacy-video" controls preload="auto" playsInline>
-                  <source src={slide.videoFile} type="video/mp4" />
-                </video>
+                {isPresenterPreview ? (
+                  <div className="presenter-media-placeholder">Video preview disabled in presenter window</div>
+                ) : (
+                  <video className="legacy-video" controls preload="auto" playsInline>
+                    <source src={slide.videoFile} type="video/mp4" />
+                  </video>
+                )}
               </div>
               {slide.secondVideoFile ? (
                 <div className="legacy-video-card">
                   <p className="legacy-video-label">Performance 2</p>
-                  <video className="legacy-video" controls preload="auto" playsInline>
-                    <source src={slide.secondVideoFile} type="video/mp4" />
-                  </video>
+                  {isPresenterPreview ? (
+                    <div className="presenter-media-placeholder">Video preview disabled in presenter window</div>
+                  ) : (
+                    <video className="legacy-video" controls preload="auto" playsInline>
+                      <source src={slide.secondVideoFile} type="video/mp4" />
+                    </video>
+                  )}
                 </div>
               ) : null}
             </div>
