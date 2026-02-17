@@ -1,125 +1,127 @@
-import { useMemo, useState } from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
+import { useEffect, useState } from 'react';
 import AnimatedCounter from '../shared/AnimatedCounter';
 import InteractiveGallery from './InteractiveGallery';
 
-const videoCards = [
-  { title: 'One Dance', youtubeId: '4JipHEz53sU', description: 'Le hit qui a ouvert les charts mondiaux.' },
-  { title: 'Essence', youtubeId: 'm77FDcKg96Q', description: 'Le morceau qui a impose l Afrobeats partout.' },
-  { title: 'Live Performance', youtubeId: 'qTRQiwaU7GI', description: 'Une presence scénique puissante en direct.' },
-];
-
-function Reveal({ step, revealStep, children, className = '' }) {
-  const visible = revealStep >= step;
-
+function FactCard({ label, value, delay = '0s' }) {
   return (
-    <motion.div
-      className={className}
-      initial={false}
-      animate={{ opacity: visible ? 1 : 0, y: visible ? 0 : 20, scale: visible ? 1 : 0.98 }}
-      transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-      style={{ pointerEvents: visible ? 'auto' : 'none' }}
-    >
-      {children}
-    </motion.div>
-  );
-}
-
-function SectionTitle({ children }) {
-  return (
-    <h2 className="font-display text-3xl font-extrabold leading-tight tracking-tight text-white sm:text-5xl lg:text-6xl">
-      {children}
-    </h2>
-  );
-}
-
-function StatCard({ label, value }) {
-  return (
-    <article className="glass-panel rounded-2xl p-4 shadow-keynote">
-      <p className="text-[0.7rem] uppercase tracking-[0.18em] text-amber-200/80">{label}</p>
-      <p className="mt-2 text-lg font-semibold text-white sm:text-xl">{value}</p>
+    <article className="glass-card reveal" style={{ animationDelay: delay }}>
+      <p className="fact-label">{label}</p>
+      <p className="fact-value">{value}</p>
     </article>
   );
 }
 
-function IconPill({ text }) {
+function RevealBlock({ step, revealStep, className = '', style, children }) {
+  const isVisible = revealStep >= step;
   return (
-    <span className="rounded-full border border-emerald-300/45 bg-emerald-500/10 px-3 py-1 text-xs font-medium uppercase tracking-[0.12em] text-emerald-100">
-      {text}
+    <div className={`click-reveal ${isVisible ? 'is-visible' : ''} ${className}`} style={style}>
+      {children}
+    </div>
+  );
+}
+
+function IconBadge({ type, label }) {
+  return (
+    <span className="icon-badge">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        {type === 'music' ? <path d="M16 4v11.2a3.5 3.5 0 1 1-1-2.4V7.2l-6 1.8v8.2a3.5 3.5 0 1 1-1-2.4V8.2c0-.44.29-.83.71-.96l7.99-2.4A1 1 0 0 1 18 5.8v9.4h-2V4z" /> : null}
+        {type === 'star' ? <path d="m12 3 2.66 5.39 5.95.87-4.3 4.19 1.02 5.93L12 16.6l-5.33 2.78 1.02-5.93-4.3-4.19 5.95-.87z" /> : null}
+        {type === 'globe' ? <path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm7.93 9h-3.06a15.6 15.6 0 0 0-1.24-5 8.04 8.04 0 0 1 4.3 5ZM12 4.02c.93 1.2 1.72 3.2 2 5.98h-4c.28-2.78 1.07-4.78 2-5.98ZM8.37 6a15.6 15.6 0 0 0-1.24 5H4.07a8.04 8.04 0 0 1 4.3-5ZM4.07 13h3.06c.2 1.8.64 3.52 1.24 5a8.04 8.04 0 0 1-4.3-5ZM12 19.98c-.93-1.2-1.72-3.2-2-5.98h4c-.28 2.78-1.07 4.78-2 5.98ZM15.63 18c.6-1.48 1.04-3.2 1.24-5h3.06a8.04 8.04 0 0 1-4.3 5Z" /> : null}
+      </svg>
+      {label}
     </span>
   );
 }
 
-export default function SlideContent({ slide, revealStep, isActive }) {
+const videoCards = [
+  {
+    title: 'One Dance',
+    youtubeId: '4JipHEz53sU',
+    description: 'Le titre qui a accelere son impact mondial.',
+  },
+  {
+    title: 'Essence',
+    youtubeId: 'm77FDcKg96Q',
+    description: 'L hymne Afrobeats qui a conquis les charts.',
+  },
+  {
+    title: 'Live Performance',
+    youtubeId: 'qTRQiwaU7GI',
+    description: 'Une presence scenique qui captive tout le public.',
+  },
+];
+
+export default function SlideContent({ slide, isActive, revealStep = 0 }) {
   const [activeVideo, setActiveVideo] = useState(null);
 
-  const mapDots = useMemo(
-    () => [
-      { country: 'Nigeria', left: '49%', top: '56%' },
-      { country: 'United Kingdom', left: '44%', top: '35%' },
-      { country: 'United States', left: '29%', top: '39%' },
-      { country: 'Canada', left: '27%', top: '31%' },
-    ],
-    []
-  );
+  useEffect(() => {
+    if (!activeVideo) {
+      return;
+    }
+
+    const handleKeyDown = (event) => {
+      if (event.key === 'Escape') {
+        setActiveVideo(null);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [activeVideo]);
 
   switch (slide.key) {
     case 'opening':
       return (
-        <div className="space-y-6 md:space-y-8">
-          <p className="text-sm font-semibold uppercase tracking-[0.26em] text-amber-200 sm:text-base">
+        <div className="opening-layout keynote-grid">
+          <p className="biggest-presentation top-headline reveal" style={{ animationDelay: '0.05s' }}>
             The Biggest Presentation
           </p>
-          <p className="inline-flex rounded-full border border-white/25 bg-black/35 px-3 py-1 text-xs uppercase tracking-[0.18em] text-slate-200">
-            World Class Keynote
-          </p>
-          <h1 className="font-display text-5xl font-extrabold uppercase leading-[0.9] text-white sm:text-7xl lg:text-9xl">
-            <span className="typing-title inline-block">WIZKID</span>
+          <p className="eyebrow reveal">World Class Keynote</p>
+          <h1 className="hero-title typing-title" aria-label={slide.title}>
+            <span className="typing-text">{slide.title}</span>
           </h1>
-          <motion.p
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.35, duration: 0.6 }}
-            className="max-w-3xl text-lg text-slate-200 sm:text-2xl"
-          >
+          <p className="hero-subtitle reveal" style={{ animationDelay: '0.35s' }}>
             {slide.subtitle}
-          </motion.p>
-          <Reveal step={1} revealStep={revealStep} className="flex flex-wrap gap-2">
-            <IconPill text="Afrobeats" />
-            <IconPill text="Culture" />
-            <IconPill text="Global Impact" />
-          </Reveal>
-          <Reveal step={2} revealStep={revealStep}>
-            <p className="text-sm text-slate-300 sm:text-base">{slide.presenter}</p>
-          </Reveal>
-          <Reveal step={3} revealStep={revealStep}>
-            <p className="text-sm text-amber-100/90">{slide.date}</p>
-          </Reveal>
+          </p>
+          <RevealBlock step={1} revealStep={revealStep} className="opening-badges" style={{ animationDelay: '0.45s' }}>
+            <span>Afrobeats</span>
+            <span>Culture</span>
+            <span>Global Impact</span>
+          </RevealBlock>
+          <RevealBlock step={2} revealStep={revealStep} className="icon-row">
+            <IconBadge type="music" label="Sound" />
+            <IconBadge type="star" label="Stardom" />
+            <IconBadge type="globe" label="Worldwide" />
+          </RevealBlock>
+          <RevealBlock step={3} revealStep={revealStep}>
+            <p className="presenter-meta">{slide.presenter} | {slide.date}</p>
+          </RevealBlock>
         </div>
       );
 
     case 'identity':
       return (
-        <div className="grid gap-6 lg:grid-cols-[1.05fr_0.95fr] lg:gap-8">
-          <div className="space-y-4">
-            <SectionTitle>Who Is Wizkid?</SectionTitle>
-            <Reveal step={1} revealStep={revealStep}>
-              <p className="max-w-2xl text-base text-slate-200 sm:text-lg">
-                Ayodeji Ibrahim Balogun est une reference mondiale de l Afrobeats et une icone culturelle africaine.
-              </p>
-            </Reveal>
-            <Reveal step={2} revealStep={revealStep} className="grid gap-3 sm:grid-cols-2">
-              <StatCard label="Origin" value="Surulere, Lagos" />
-              <StatCard label="Signature" value="Melodies + Groove" />
-            </Reveal>
-            <Reveal step={3} revealStep={revealStep} className="flex flex-wrap gap-2">
-              <IconPill text="Global Icon" />
-              <IconPill text="African Excellence" />
-            </Reveal>
+        <div className="content-stack identity-layout">
+          <div>
+            <h2 className="slide-title reveal">Who Is Wizkid?</h2>
+            <RevealBlock step={1} revealStep={revealStep}>
+              <p className="slide-lead">Ayodeji Ibrahim Balogun is one of the strongest African creative forces of his generation.</p>
+            </RevealBlock>
+            <RevealBlock step={2} revealStep={revealStep} className="identity-tags">
+              <span>Lagos, Nigeria</span>
+              <span>Afrobeats / R&B</span>
+              <span>Global Icon</span>
+            </RevealBlock>
+            <RevealBlock step={3} revealStep={revealStep}>
+              <div className="facts-grid">
+                <FactCard label="Origin" value="Surulere" delay="0.1s" />
+                <FactCard label="Craft" value="Melody + Rhythm" delay="0.15s" />
+                <FactCard label="Identity" value="African Excellence" delay="0.2s" />
+              </div>
+            </RevealBlock>
           </div>
-
-          <div className="glass-panel overflow-hidden rounded-3xl border border-white/20 p-3">
-            <video controls preload="metadata" className="w-full rounded-2xl bg-black">
+          <div className="identity-video-wrap reveal" style={{ animationDelay: '0.25s' }}>
+            <video className="identity-video" controls preload="metadata">
               <source src={slide.videoFile} type="video/mp4" />
             </video>
           </div>
@@ -128,287 +130,235 @@ export default function SlideContent({ slide, revealStep, isActive }) {
 
     case 'beginnings':
       return (
-        <div className="space-y-5">
-          <SectionTitle>Humble Beginnings</SectionTitle>
-          <Reveal step={1} revealStep={revealStep}>
-            <p className="max-w-3xl text-base text-slate-200 sm:text-lg">
-              Tout commence a Lagos. Discipline, repetitions, studio tres jeune: le socle de sa carriere est construit tres tot.
-            </p>
-          </Reveal>
-          <Reveal step={2} revealStep={revealStep} className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
-            <StatCard label="Childhood" value="Lagos" />
-            <StatCard label="Age 11" value="First recordings" />
-            <StatCard label="First Group" value="Glorious Five" />
-            <StatCard label="Mindset" value="Obsessed with growth" />
-          </Reveal>
-          <Reveal step={3} revealStep={revealStep} className="flex flex-wrap gap-2">
-            <IconPill text="Talent" />
-            <IconPill text="Work Ethic" />
-            <IconPill text="Vision" />
-          </Reveal>
+        <div className="content-stack wide">
+          <h2 className="slide-title reveal">Humble Beginnings</h2>
+          <RevealBlock step={1} revealStep={revealStep}>
+            <p className="slide-lead">From the streets of Lagos to global arenas, his rise started with discipline and obsession.</p>
+          </RevealBlock>
+          <RevealBlock step={2} revealStep={revealStep}>
+            <div className="timeline-row">
+              <article className="timeline-node"><p className="timeline-year">1990</p><p>Born in Lagos</p></article>
+              <article className="timeline-node"><p className="timeline-year">11 Years</p><p>First recording sessions</p></article>
+              <article className="timeline-node"><p className="timeline-year">Teen Years</p><p>First group: Glorious Five</p></article>
+              <article className="timeline-node"><p className="timeline-year">Turning Point</p><p>Signed, focused, unstoppable</p></article>
+            </div>
+          </RevealBlock>
+          <RevealBlock step={3} revealStep={revealStep} className="icon-row">
+            <IconBadge type="music" label="Early Talent" />
+            <IconBadge type="star" label="Work Ethic" />
+          </RevealBlock>
         </div>
       );
 
     case 'stardom':
       return (
-        <div className="space-y-5">
-          <SectionTitle>Rise to Stardom</SectionTitle>
-          <Reveal step={1} revealStep={revealStep} className="grid gap-3 lg:grid-cols-3">
-            <StatCard label="Breakout" value="Holla at Your Boy" />
-            <StatCard label="Debut Album" value="Superstar (2011)" />
-            <StatCard label="Result" value="Pan-African breakthrough" />
-          </Reveal>
-          <Reveal step={2} revealStep={revealStep}>
-            <p className="max-w-3xl text-base text-slate-200 sm:text-lg">
-              Une trajectoire rapide: tube, album, confirmation, puis domination regionale.
-            </p>
-          </Reveal>
-          <Reveal step={3} revealStep={revealStep} className="flex flex-wrap gap-2">
-            <IconPill text="Hitmaker" />
-            <IconPill text="Stage Power" />
-          </Reveal>
+        <div className="content-stack wide">
+          <h2 className="slide-title reveal">Rise to Stardom</h2>
+          <RevealBlock step={1} revealStep={revealStep}>
+            <div className="stardom-board">
+              <FactCard label="Breakout" value="Holla at Your Boy" delay="0.05s" />
+              <FactCard label="Debut Album" value="Superstar (2011)" delay="0.1s" />
+              <FactCard label="Effect" value="Pan-African Phenomenon" delay="0.15s" />
+            </div>
+          </RevealBlock>
+          <RevealBlock step={2} revealStep={revealStep} className="icon-row">
+            <IconBadge type="star" label="Hit Maker" />
+            <IconBadge type="globe" label="Cross Border" />
+          </RevealBlock>
+          <RevealBlock step={3} revealStep={revealStep}>
+            <p className="signature-line">One single changed everything. One album confirmed greatness.</p>
+          </RevealBlock>
         </div>
       );
 
     case 'global':
       return (
-        <div className="space-y-5">
-          <SectionTitle>Global Breakthrough</SectionTitle>
-          <Reveal step={1} revealStep={revealStep}>
-            <p className="max-w-3xl text-base text-slate-200 sm:text-lg">
-              One Dance avec Drake propulse Wizkid dans les top charts internationaux et installe l Afrobeats dans le mainstream.
-            </p>
-          </Reveal>
-
-          <Reveal step={2} revealStep={revealStep}>
-            <div className="relative min-h-52 overflow-hidden rounded-3xl border border-white/20 bg-[linear-gradient(rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.05)_1px,transparent_1px),radial-gradient(circle_at_center,rgba(15,53,95,0.6),rgba(2,5,12,0.9))] bg-[length:42px_42px,42px_42px,auto] p-3">
-              {mapDots.map((dot) => (
-                <motion.div
-                  key={dot.country}
-                  className="absolute -translate-x-1/2 -translate-y-1/2 rounded-full border border-amber-300/75 bg-black/75 px-2 py-1 text-[0.62rem] font-semibold uppercase tracking-[0.12em] text-amber-100 sm:text-[0.68rem]"
-                  style={{ left: dot.left, top: dot.top }}
-                  initial={{ opacity: 0, scale: 0.5 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                >
-                  {dot.country}
-                </motion.div>
-              ))}
+        <div className="content-stack wide">
+          <h2 className="slide-title reveal">Global Breakthrough</h2>
+          <RevealBlock step={1} revealStep={revealStep}>
+            <p className="slide-lead">One Dance with Drake transformed Wizkid from continental star to global chart authority.</p>
+          </RevealBlock>
+          <RevealBlock step={2} revealStep={revealStep}>
+            <div className="world-map">
+              <div className="map-dot lagos">Nigeria</div>
+              <div className="map-dot london">United Kingdom</div>
+              <div className="map-dot newyork">United States</div>
+              <div className="map-dot toronto">Canada</div>
             </div>
-          </Reveal>
-
-          <Reveal step={3} revealStep={revealStep} className="flex flex-wrap gap-2">
-            <IconPill text="#1 multi countries" />
-            <IconPill text="Billions of streams" />
-            <IconPill text="Afrobeats worldwide" />
-          </Reveal>
+          </RevealBlock>
+          <RevealBlock step={3} revealStep={revealStep} className="global-metrics">
+            <span>#1 in multiple countries</span>
+            <span>Billions of streams</span>
+            <span>Afrobeats on world radios</span>
+          </RevealBlock>
         </div>
       );
 
     case 'afrobeats':
       return (
-        <div className="grid gap-6 lg:grid-cols-[1.05fr_0.95fr] lg:gap-8">
-          <div className="space-y-4">
-            <SectionTitle>Afrobeats Revolution</SectionTitle>
-            <Reveal step={1} revealStep={revealStep}>
-              <p className="text-base text-slate-200 sm:text-lg">
-                Wizkid a porte une identite musicale africaine sur des scenes globales, sans diluer son ADN.
-              </p>
-            </Reveal>
-            <Reveal step={2} revealStep={revealStep} className="grid gap-3 sm:grid-cols-2">
-              <StatCard label="Sound" value="Afrobeats mainstream" />
-              <StatCard label="Culture" value="African pride amplified" />
-            </Reveal>
-            <Reveal step={3} revealStep={revealStep} className="flex flex-wrap gap-2">
-              <IconPill text="Ambassador" />
-              <IconPill text="Movement" />
-            </Reveal>
-          </div>
-
-          <div className="glass-panel overflow-hidden rounded-3xl border border-white/20 p-3">
-            <iframe
-              src="https://www.youtube.com/embed/XRXUSCBzDIg"
-              title="Wizkid - Afrobeats Revolution"
-              className="aspect-video w-full rounded-2xl"
-              loading="lazy"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-            />
+        <div className="content-stack wide">
+          <h2 className="slide-title reveal">Afrobeats Revolution</h2>
+          <div className="afrobeats-layout">
+            <div className="afrobeats-video-wrap reveal" style={{ animationDelay: '0.2s' }}>
+              <iframe
+                src="https://www.youtube.com/embed/XRXUSCBzDIg"
+                title="Wizkid - Afrobeats Revolution"
+                loading="lazy"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              />
+            </div>
+            <div className="afrobeats-copy">
+              <RevealBlock step={1} revealStep={revealStep}>
+                <p className="quote-mini">He did not export a sound only. He exported identity.</p>
+              </RevealBlock>
+              <RevealBlock step={2} revealStep={revealStep}>
+                <div className="pillars-grid">
+                  <FactCard label="Sound" value="Afrobeats mainstream" delay="0.1s" />
+                  <FactCard label="Culture" value="African pride globally" delay="0.15s" />
+                  <FactCard label="Legacy" value="Doors opened for many" delay="0.2s" />
+                </div>
+              </RevealBlock>
+              <RevealBlock step={3} revealStep={revealStep} className="icon-row">
+                <IconBadge type="music" label="Rhythm" />
+                <IconBadge type="globe" label="Movement" />
+              </RevealBlock>
+            </div>
           </div>
         </div>
       );
 
     case 'awards':
       return (
-        <div className="space-y-5">
-          <SectionTitle>Awards & Records</SectionTitle>
-          <Reveal step={1} revealStep={revealStep} className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
-            <StatCard label="Grammy" value="Winner" />
-            <StatCard label="BET Awards" value="Multiple Wins" />
-            <StatCard label="Streams" value={<AnimatedCounter target={5} suffix="B+" isActive={isActive} />} />
-            <StatCard label="Monthly Reach" value={<AnimatedCounter target={30} suffix="M+" isActive={isActive} />} />
-          </Reveal>
-          <Reveal step={2} revealStep={revealStep}>
-            <p className="max-w-3xl text-base text-slate-200 sm:text-lg">
-              Les chiffres confirment l impact: constance, longévité, influence transnationale.
-            </p>
-          </Reveal>
-          <Reveal step={3} revealStep={revealStep} className="flex flex-wrap gap-2">
-            <IconPill text="Elite Awards" />
-            <IconPill text="Chart Authority" />
-          </Reveal>
+        <div className="content-stack wide">
+          <h2 className="slide-title reveal">Awards & Records</h2>
+          <RevealBlock step={1} revealStep={revealStep}>
+            <div className="counters-grid trophy-grid">
+              <article className="glass-card"><p className="fact-label">Grammy</p><p className="fact-value">Winner</p></article>
+              <article className="glass-card"><p className="fact-label">BET Awards</p><p className="fact-value">Multi-Winner</p></article>
+              <article className="glass-card"><p className="fact-label">Streams</p><p className="fact-value"><AnimatedCounter target={5} suffix="B+" isActive={isActive} /></p></article>
+              <article className="glass-card"><p className="fact-label">Monthly Reach</p><p className="fact-value"><AnimatedCounter target={30} suffix="M+" isActive={isActive} /></p></article>
+            </div>
+          </RevealBlock>
+          <RevealBlock step={2} revealStep={revealStep} className="icon-row">
+            <IconBadge type="star" label="Elite Awards" />
+            <IconBadge type="globe" label="Global Charts" />
+          </RevealBlock>
         </div>
       );
 
     case 'videos':
       return (
-        <div className="space-y-5">
-          <SectionTitle>Video Experience</SectionTitle>
-          <Reveal step={1} revealStep={revealStep}>
-            <p className="text-base text-slate-200 sm:text-lg">Cliquez sur une carte pour lancer la vidéo.</p>
-          </Reveal>
-
-          <Reveal step={2} revealStep={revealStep} className="grid gap-4 md:grid-cols-3">
-            {videoCards.map((video) => (
-              <button
-                key={video.youtubeId}
-                type="button"
-                onClick={() => setActiveVideo(video)}
-                className="group overflow-hidden rounded-2xl border border-white/20 bg-slate-900/55 text-left transition hover:-translate-y-1 hover:border-amber-300/65"
-              >
-                <div className="relative">
-                  <img
-                    src={`https://i.ytimg.com/vi/${video.youtubeId}/hqdefault.jpg`}
-                    alt={video.title}
-                    className="h-40 w-full object-cover brightness-75 transition group-hover:scale-105 group-hover:brightness-95"
-                  />
-                  <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full border border-white/55 bg-black/75 px-4 py-1 text-xs uppercase tracking-[0.12em] text-white">
-                    Play
-                  </span>
-                </div>
-                <div className="p-3">
-                  <h3 className="font-display text-lg font-bold text-white">{video.title}</h3>
-                  <p className="mt-1 text-sm text-slate-300">{video.description}</p>
-                </div>
-              </button>
-            ))}
-          </Reveal>
-
-          <Reveal step={2} revealStep={revealStep}>
-            <InteractiveGallery />
-          </Reveal>
-
-          <AnimatePresence>
-            {activeVideo && (
-              <motion.div
-                className="fixed inset-0 z-[130] grid place-items-center bg-black/85 p-4"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                onClick={() => setActiveVideo(null)}
-              >
-                <motion.div
-                  className="w-full max-w-5xl rounded-3xl border border-white/20 bg-slate-950/95 p-4"
-                  initial={{ scale: 0.92, opacity: 0 }}
-                  animate={{ scale: 1, opacity: 1 }}
-                  exit={{ scale: 0.95, opacity: 0 }}
-                  onClick={(event) => event.stopPropagation()}
-                >
-                  <div className="mb-3 flex items-center justify-between gap-3">
-                    <h3 className="font-display text-xl font-bold text-white">{activeVideo.title}</h3>
-                    <button
-                      type="button"
-                      onClick={() => setActiveVideo(null)}
-                      className="rounded-lg border border-white/20 px-3 py-1.5 text-sm text-slate-200 transition hover:border-amber-300/60 hover:text-amber-100"
-                    >
-                      Close
-                    </button>
+        <div className="content-stack wide">
+          <h2 className="slide-title reveal">Video Experience</h2>
+          <RevealBlock step={1} revealStep={revealStep}>
+            <p className="slide-lead">Click a card to launch a focused playback.</p>
+          </RevealBlock>
+          <RevealBlock step={2} revealStep={revealStep}>
+            <div className="video-grid">
+              {videoCards.map((video) => (
+                <button key={video.youtubeId} type="button" className="video-card clickable-video" onClick={() => setActiveVideo(video)}>
+                  <div className="video-thumb-wrap">
+                    <img src={`https://i.ytimg.com/vi/${video.youtubeId}/hqdefault.jpg`} alt={video.title} className="video-thumb" />
+                    <span className="play-badge">Play</span>
                   </div>
-                  <iframe
-                    src={`https://www.youtube.com/embed/${activeVideo.youtubeId}?autoplay=1&rel=0`}
-                    title={activeVideo.title}
-                    className="aspect-video w-full rounded-2xl"
-                    loading="lazy"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                  />
-                </motion.div>
-              </motion.div>
-            )}
-          </AnimatePresence>
+                  <h3>{video.title}</h3>
+                  <p>{video.description}</p>
+                </button>
+              ))}
+            </div>
+          </RevealBlock>
+          <InteractiveGallery />
+
+          {activeVideo ? (
+            <div className="video-modal-backdrop" role="dialog" aria-modal="true" onClick={() => setActiveVideo(null)}>
+              <div className="video-modal-content" onClick={(event) => event.stopPropagation()}>
+                <div className="video-modal-header">
+                  <h3>{activeVideo.title}</h3>
+                  <button type="button" className="close-video-modal" onClick={() => setActiveVideo(null)}>Fermer</button>
+                </div>
+                <iframe
+                  src={`https://www.youtube.com/embed/${activeVideo.youtubeId}?autoplay=1&rel=0`}
+                  title={activeVideo.title}
+                  loading="lazy"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                />
+              </div>
+            </div>
+          ) : null}
         </div>
       );
 
     case 'legacy':
       return (
-        <div className="space-y-5">
-          <SectionTitle>Influence & Legacy</SectionTitle>
-          <Reveal step={1} revealStep={revealStep}>
-            <p className="max-w-3xl text-base text-slate-200 sm:text-lg">
-              Son impact depasse la musique: mode, narration, identite africaine et inspiration d une nouvelle generation.
-            </p>
-          </Reveal>
-
-          <Reveal step={2} revealStep={revealStep} className="grid gap-4 md:grid-cols-2">
-            <video controls preload="metadata" className="w-full rounded-2xl border border-white/20 bg-black">
-              <source src={slide.videoFile} type="video/mp4" />
-            </video>
-            {slide.secondVideoFile ? (
-              <video controls preload="metadata" className="w-full rounded-2xl border border-white/20 bg-black">
-                <source src={slide.secondVideoFile} type="video/mp4" />
+        <div className="content-stack wide legacy-layout">
+          <div>
+            <h2 className="slide-title reveal">Influence & Legacy</h2>
+            <RevealBlock step={1} revealStep={revealStep}>
+              <p className="slide-lead">Beyond music, Wizkid shaped how African creativity is perceived in fashion, media, and youth culture.</p>
+            </RevealBlock>
+          </div>
+          <RevealBlock step={2} revealStep={revealStep} className="legacy-video-wrap">
+            <div className="legacy-video-stack">
+              <video className="legacy-video" controls preload="metadata">
+                <source src={slide.videoFile} type="video/mp4" />
               </video>
-            ) : null}
-          </Reveal>
-
-          <Reveal step={3} revealStep={revealStep} className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
-            <StatCard label="Artists" value="New generation inspired" />
-            <StatCard label="Fashion" value="Global style reference" />
-            <StatCard label="Culture" value="African identity amplified" />
-            <StatCard label="Reputation" value="Long-term global respect" />
-          </Reveal>
-          <Reveal step={4} revealStep={revealStep} className="flex flex-wrap gap-2">
-            <IconPill text="Influence" />
-            <IconPill text="Legacy" />
-            <IconPill text="Respect" />
-          </Reveal>
+              {slide.secondVideoFile ? (
+                <video className="legacy-video" controls preload="metadata">
+                  <source src={slide.secondVideoFile} type="video/mp4" />
+                </video>
+              ) : null}
+            </div>
+          </RevealBlock>
+          <RevealBlock step={3} revealStep={revealStep}>
+            <div className="legacy-grid">
+              <FactCard label="Artists" value="A whole new generation inspired" delay="0.1s" />
+              <FactCard label="Fashion" value="Style references worldwide" delay="0.15s" />
+              <FactCard label="Culture" value="African identity amplified" delay="0.2s" />
+              <FactCard label="Reputation" value="Global respect sustained" delay="0.25s" />
+            </div>
+          </RevealBlock>
+          <RevealBlock step={4} revealStep={revealStep} className="icon-row">
+            <IconBadge type="music" label="Influence" />
+            <IconBadge type="star" label="Legacy" />
+            <IconBadge type="globe" label="Impact" />
+          </RevealBlock>
         </div>
       );
 
     case 'greatest':
       return (
-        <div className="space-y-5">
-          <SectionTitle>Why He Is the Greatest African Artist</SectionTitle>
-          <Reveal step={1} revealStep={revealStep}>
-            <p className="max-w-3xl text-base text-slate-200 sm:text-lg">
-              Il cumule impact culturel, performance commerciale, influence artistique et constance sur la duree.
-            </p>
-          </Reveal>
-          <Reveal step={2} revealStep={revealStep} className="grid gap-3 md:grid-cols-2">
-            <StatCard label="Charts" value="Global and sustained" />
-            <StatCard label="Collaborations" value="Top-tier international" />
-            <StatCard label="Storytelling" value="Culture-first vision" />
-            <StatCard label="Influence" value="Cross-generational" />
-          </Reveal>
-          <Reveal step={3} revealStep={revealStep}>
-            <p className="font-display text-2xl font-bold text-amber-100 sm:text-4xl">
-              He did not follow the global sound. He helped redefine it.
-            </p>
-          </Reveal>
+        <div className="content-stack centered manifesto-wrap">
+          <h2 className="slide-title reveal">Why He Is the Greatest African Artist</h2>
+          <RevealBlock step={1} revealStep={revealStep}>
+            <p className="slide-lead">Consistency. Authenticity. Global proof. Cultural responsibility.</p>
+          </RevealBlock>
+          <RevealBlock step={2} revealStep={revealStep}>
+            <div className="manifesto-grid">
+              <span>Global charts domination</span>
+              <span>Iconic collaborations</span>
+              <span>Culture-first storytelling</span>
+              <span>Multi-generational influence</span>
+            </div>
+          </RevealBlock>
+          <RevealBlock step={3} revealStep={revealStep}>
+            <p className="signature-line">He did not follow the global sound. He changed it.</p>
+          </RevealBlock>
         </div>
       );
 
     case 'message':
       return (
-        <div className="space-y-6 text-center">
-          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-emerald-200">Final Message</p>
-          <SectionTitle>Inspirational Message</SectionTitle>
-          <Reveal step={1} revealStep={revealStep}>
-            <p className="mx-auto max-w-4xl font-display text-2xl font-bold leading-tight text-amber-100 sm:text-4xl lg:text-5xl">
-              From Lagos dreams to global stages, African excellence has no ceiling.
-            </p>
-          </Reveal>
-          <Reveal step={2} revealStep={revealStep}>
-            <p className="text-sm uppercase tracking-[0.2em] text-slate-200">Thank You</p>
-          </Reveal>
+        <div className="content-stack centered ending finale-wrap">
+          <p className="eyebrow reveal">Final Message</p>
+          <h2 className="slide-title reveal" style={{ animationDelay: '0.15s' }}>Inspirational Message</h2>
+          <RevealBlock step={1} revealStep={revealStep}>
+            <p className="quote">"From Lagos dreams to global stages, African excellence has no ceiling."</p>
+          </RevealBlock>
+          <RevealBlock step={2} revealStep={revealStep} className="icon-row">
+            <IconBadge type="star" label="Thank You" />
+          </RevealBlock>
         </div>
       );
 

@@ -1,60 +1,71 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { AnimatePresence } from 'framer-motion';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { slides } from './data/slides';
 import { useKeyboardNavigation } from './hooks/useKeyboardNavigation';
-import Slide from './components/Presentation/Slide';
-import SlideContent from './components/Presentation/SlideContent';
+import AudioControl from './components/Presentation/AudioControl';
 import Navigation from './components/Presentation/Navigation';
 import ProgressBar from './components/Presentation/ProgressBar';
 import SlideDots from './components/Presentation/SlideDots';
-import AudioControl from './components/Presentation/AudioControl';
+import Slide from './components/Presentation/Slide';
+import SlideContent from './components/Presentation/SlideContent';
 
-const TRANSITION_LOCK_MS = 700;
+const TRANSITION_LOCK_MS = 680;
 
 export default function App() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [direction, setDirection] = useState(1);
   const [revealStep, setRevealStep] = useState(0);
   const lockRef = useRef(false);
+  const revealStepRef = useRef(0);
+  const maxRevealRef = useRef(0);
 
-  const activeSlide = slides[activeIndex];
-  const maxRevealSteps = activeSlide.revealSteps ?? 0;
-  const progress = useMemo(() => ((activeIndex + 1) / slides.length) * 100, [activeIndex]);
-
-  useEffect(() => {
-    setRevealStep(0);
-  }, [activeIndex]);
-
-  const advanceRevealOrSlide = useCallback(() => {
-    if (revealStep < maxRevealSteps) {
-      setRevealStep((prev) => Math.min(prev + 1, maxRevealSteps));
+  const goToNext = useCallback(() => {
+    if (revealStepRef.current < maxRevealRef.current) {
+      setRevealStep((previous) => {
+        const nextStep = Math.min(previous + 1, maxRevealRef.current);
+        revealStepRef.current = nextStep;
+        return nextStep;
+      });
       return;
     }
 
-    if (lockRef.current || activeIndex >= slides.length - 1) {
+    if (lockRef.current) {
       return;
     }
 
-    lockRef.current = true;
-    setDirection(1);
-    setActiveIndex((prev) => prev + 1);
-    window.setTimeout(() => {
-      lockRef.current = false;
-    }, TRANSITION_LOCK_MS);
-  }, [activeIndex, maxRevealSteps, revealStep]);
+    setActiveIndex((previous) => {
+      if (previous >= slides.length - 1) {
+        return previous;
+      }
 
-  const goPrev = useCallback(() => {
-    if (lockRef.current || activeIndex <= 0) {
+      lockRef.current = true;
+      setDirection(1);
+      window.setTimeout(() => {
+        lockRef.current = false;
+      }, TRANSITION_LOCK_MS);
+
+      return previous + 1;
+    });
+  }, []);
+
+  const goToPrevious = useCallback(() => {
+    if (lockRef.current) {
       return;
     }
 
-    lockRef.current = true;
-    setDirection(-1);
-    setActiveIndex((prev) => prev - 1);
-    window.setTimeout(() => {
-      lockRef.current = false;
-    }, TRANSITION_LOCK_MS);
-  }, [activeIndex]);
+    setActiveIndex((previous) => {
+      if (previous <= 0) {
+        return previous;
+      }
+
+      lockRef.current = true;
+      setDirection(-1);
+      window.setTimeout(() => {
+        lockRef.current = false;
+      }, TRANSITION_LOCK_MS);
+
+      return previous - 1;
+    });
+  }, []);
 
   const goToIndex = useCallback((targetIndex) => {
     if (lockRef.current || targetIndex === activeIndex || targetIndex < 0 || targetIndex >= slides.length) {
@@ -69,32 +80,43 @@ export default function App() {
     }, TRANSITION_LOCK_MS);
   }, [activeIndex]);
 
-  useKeyboardNavigation({ onNext: advanceRevealOrSlide, onPrev: goPrev });
+  useKeyboardNavigation({ onNext: goToNext, onPrev: goToPrevious });
+
+  const progress = (activeIndex / (slides.length - 1)) * 100;
+  const activeSlide = slides[activeIndex];
+  const maxRevealSteps = activeSlide.revealSteps ?? 0;
+
+  useEffect(() => {
+    setRevealStep(0);
+    revealStepRef.current = 0;
+    maxRevealRef.current = maxRevealSteps;
+  }, [activeIndex]);
+
+  const handleReveal = useCallback(() => {
+    setRevealStep((previous) => {
+      if (previous >= maxRevealSteps) {
+        return previous;
+      }
+      const nextStep = previous + 1;
+      revealStepRef.current = nextStep;
+      return nextStep;
+    });
+  }, [maxRevealSteps]);
 
   return (
-    <main className="keynote-shell relative h-full w-full overflow-hidden text-slate-100">
+    <main className="app-shell">
       <ProgressBar progress={progress} />
+      <p className="slide-meta">{activeSlide.title}</p>
 
-      <div className="pointer-events-none fixed left-4 top-4 z-40 rounded-full border border-white/20 bg-black/45 px-3 py-1 text-[0.64rem] uppercase tracking-[0.22em] text-slate-300">
-        {activeSlide.title}
-      </div>
-
-      <AnimatePresence mode="wait" initial={false} custom={direction}>
-        <Slide
-          key={activeSlide.id}
-          slide={activeSlide}
-          direction={direction}
-          onReveal={advanceRevealOrSlide}
-        >
-          <SlideContent slide={activeSlide} revealStep={revealStep} isActive />
-        </Slide>
-      </AnimatePresence>
+      <Slide slide={activeSlide} direction={direction} key={activeSlide.id} onReveal={handleReveal}>
+        <SlideContent slide={activeSlide} isActive revealStep={revealStep} />
+      </Slide>
 
       <Navigation
         currentIndex={activeIndex}
         totalSlides={slides.length}
-        onNext={advanceRevealOrSlide}
-        onPrev={goPrev}
+        onNext={goToNext}
+        onPrev={goToPrevious}
       />
 
       <SlideDots
@@ -105,11 +127,9 @@ export default function App() {
 
       <AudioControl activeIndex={activeIndex} />
 
-      {revealStep < maxRevealSteps && (
-        <p className="pointer-events-none fixed bottom-14 left-4 z-40 rounded-full border border-white/20 bg-black/50 px-3 py-1 text-xs text-amber-100/90 md:bottom-5">
-          Cliquez pour révéler {revealStep}/{maxRevealSteps}
-        </p>
-      )}
+      {maxRevealSteps > 0 && revealStep < maxRevealSteps ? (
+        <p className="reveal-hint">Click to reveal ({revealStep}/{maxRevealSteps})</p>
+      ) : null}
     </main>
   );
 }
